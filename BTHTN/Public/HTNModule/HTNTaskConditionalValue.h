@@ -1,0 +1,204 @@
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "HTNTaskConditionalValue.generated.h"
+/**
+ * 
+ */
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpdatedTaskRelatedValue_Float, FName, KeyName, float, UpdatedValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpdatedTaskRelatedValue_Boolean, FName, KeyName, bool, UpdatedValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpdatedTaskRelatedValue_Integer, FName, KeyName, int32, UpdatedValue);
+
+UENUM(BlueprintType)
+enum class EHTNTaskRelatedValueType : uint8
+{
+	NONE,
+	FLOAT,
+	BOOL,
+	INT
+};
+
+USTRUCT(BlueprintType)
+struct FTaskRelatedValue
+{
+  GENERATED_BODY()
+public :
+
+	FTaskRelatedValue() {};
+	
+	UPROPERTY( EditAnywhere, BlueprintReadOnly )
+	FName Key;
+	
+	TVariant<int32, bool, float> Value;
+
+	UPROPERTY( EditAnywhere, BlueprintReadOnly )
+	EHTNTaskRelatedValueType ValueType = EHTNTaskRelatedValueType::NONE;
+
+	template<typename T>
+	T GetValue() const {
+		if (Value.IsType<T>())
+		{
+			return Value.Get<T>();
+		}
+		UE_LOG(LogTemp, Warning, TEXT("FTaskRelatedValue: Invalid type access!"));
+		return T();
+	}
+
+	FName GetKey() const
+	{
+		return Key;	
+	}
+	
+	template<typename T>
+	void UpdateValue( T& UpdateValue );
+
+	bool operator==(const FTaskRelatedValue& Other) const
+	{
+		return Other.Key == Key;
+	}
+};
+
+template <typename T>
+void FTaskRelatedValue::UpdateValue(T& UpdateValue)
+{
+	if (Value.IsType<T>() && Value.Get<T>() == UpdateValue)
+	{
+		return;
+	}
+
+	Value.Set<T>(UpdateValue);
+}
+
+
+USTRUCT(BlueprintType)
+struct FTaskRelatedValue_Float : public FTaskRelatedValue
+{
+	GENERATED_BODY()
+	FTaskRelatedValue_Float() {};
+	FTaskRelatedValue_Float( FName InKey, float InValue )
+	{
+		Key = InKey;
+		ValueType = EHTNTaskRelatedValueType::FLOAT;
+		Value.Set<float>(InValue);
+	}
+
+	float GetFloatValue() const
+	{
+		return GetValue<float>();
+	}
+	
+	void UpdateFloatValue( float& InValue )
+	{
+		const float CurValue = GetFloatValue();
+		UpdateValue<float>( InValue );
+		
+		if ( CurValue != InValue )
+		{
+			OnUpdatedTaskRelatedValue.Broadcast(Key, InValue);
+		}
+	}
+
+	FOnUpdatedTaskRelatedValue_Float OnUpdatedTaskRelatedValue;
+};
+
+USTRUCT( BlueprintType )
+struct FTaskRelatedValue_Boolean : public FTaskRelatedValue
+{
+	GENERATED_BODY()
+	FTaskRelatedValue_Boolean() {};
+	FTaskRelatedValue_Boolean( FName InKey, bool InValue )
+	{
+		Key = InKey;
+		ValueType = EHTNTaskRelatedValueType::BOOL;
+		Value.Set<bool>(InValue);
+	}
+
+	bool GetBooleanValue() const
+	{
+		return GetValue<bool>();		
+	}
+
+	void UpdateBoolValue( bool& InValue )
+	{
+		const bool CurValue = GetBooleanValue();
+		UpdateValue<bool>(InValue);
+
+		if ( CurValue != InValue )
+		{
+			OnUpdatedTaskRelatedValue.Broadcast(Key, InValue);
+		}
+	}
+	
+	FOnUpdatedTaskRelatedValue_Boolean OnUpdatedTaskRelatedValue;
+};
+
+USTRUCT( BlueprintType )
+struct FTaskRelatedValue_Int : public FTaskRelatedValue
+{
+	GENERATED_BODY()
+	FTaskRelatedValue_Int() {}
+	FTaskRelatedValue_Int( FName InKey, int32 InValue )
+	{
+		Key = InKey;
+		ValueType = EHTNTaskRelatedValueType::INT;
+		Value.Set<int32>(InValue);
+	}
+	
+	int32 GetIntegerValue() const
+	{
+		return GetValue<int32>();
+	}
+
+	void UpdateIntegerValue( int32& InValue )
+	{
+		const int32 CurValue = GetIntegerValue();
+		UpdateValue<int32>(InValue);
+
+		if ( CurValue != InValue )
+		{
+			OnUpdatedTaskRelatedValue.Broadcast(Key, InValue);
+		}
+	}
+	
+	FOnUpdatedTaskRelatedValue_Integer OnUpdatedTaskRelatedValue;
+};
+
+USTRUCT(BlueprintType)
+struct FTaskWorldStateData
+{
+	GENERATED_BODY()
+
+public :
+	// We assume that this values will be used to determine action plans.
+	// So this world state will be cached sometimes while blackboardasset is not.
+	void UpdateIntegerValue( FName KeyName, int32 UpdatedValue)
+	{
+		int32& NeedToUpdateValue = WorldState_Int32.FindOrAdd(KeyName);
+		NeedToUpdateValue = UpdatedValue;
+	}
+
+	void UpdateBooleanValue( FName KeyName, bool UpdatedValue)
+	{
+		bool& NeedToUpdateValue = WorldState_Boolean.FindOrAdd(KeyName);
+		NeedToUpdateValue = UpdatedValue;
+	}
+
+	void UpdateFloatValue( FName KeyName, float UpdatedValue )
+	{
+		float& NeedToUpdateValue = WorldState_Float.FindOrAdd(KeyName);
+		NeedToUpdateValue = UpdatedValue;
+	}
+	
+protected : 
+	UPROPERTY( VisibleAnywhere, Category = "INT" )
+	TMap<FName, int32> WorldState_Int32;
+
+	UPROPERTY( VisibleAnywhere, Category = "BOOLEAN")
+	TMap<FName, bool> WorldState_Boolean;
+
+	UPROPERTY( VisibleAnywhere, Category = "FLOAT")
+	TMap<FName, float> WorldState_Float;
+};
