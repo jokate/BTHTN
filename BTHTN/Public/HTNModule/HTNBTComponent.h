@@ -12,7 +12,7 @@
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class BTHTN_API UHTNBTComponent : public UActorComponent, public IHTNBTPlanner
+class BTHTN_API UHTNBTComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
@@ -36,36 +36,40 @@ public:
 	virtual UHTNTask* GetTaskByTag( FGameplayTag& TaskTag );
 
 #pragma endregion Task Planning
+	
+	virtual void OnTaskFinished( FGameplayTag& FinishedTaskTag );
 
-#pragma region IHTNBTPlanner
-	// IHTNBTPlanner method declaration
-	virtual void OnTaskFinished( FGameplayTag& FinishedTaskTag ) override;
-
-	virtual FGameplayTag GetTaskTagToActive() override;
+	virtual FGameplayTag GetTaskTagToActive();
 
 	// If something was wrong by external factor.
-	virtual void ResetAllTaskTag() override
+	virtual void ResetAllTaskTag()
 	{
 		TaskTagsToActive.Empty();
 	};
 
 	// We need to check running plan because of external factor.
-	virtual UHTNTask* GetFirstTaskInPlan() override;
+	virtual UHTNTask* GetFirstTaskInPlan();
 
-	//Need To Update World State Integer Value.
-	UFUNCTION()
-	virtual void UpdateWorldIntegerValue( FName KeyName, int32 UpdatedValue) override {}
+#pragma region Task World State
+	
+	virtual void AddTaskWorldState(UTaskWorldState* WorldState);
 
-	UFUNCTION()
-	virtual void UpdateWorldBooleanValue( FName KeyName, bool UpdatedValue) override {  }
+	virtual void AddTaskWorldStateByClass(TSubclassOf<UTaskWorldState> WorldStateClass);
 
-	UFUNCTION()
-	virtual void UpdateWorldFloatValue( FName KeyName, float UpdatedValue ) override { }
-#pragma endregion IHTNBTPlanner
+	virtual void RemoveTaskWorldState(TSubclassOf<UTaskWorldState> WorldStateClass);
+
+	virtual void ResetAllTaskWorldStates();
+	
+#pragma endregion Task World State
+
+protected :
 	
 	UPROPERTY(VisibleAnywhere, Category = "HTN Task | Task To Active")
 	TArray<FGameplayTag> TaskTagsToActive;
 
 	UPROPERTY(EditDefaultsOnly, Category = "HTN Task | Tag To Allocate")
 	TArray<UHTNTask*> RegisteredTask;
+
+	UPROPERTY()
+	TArray<TObjectPtr<class UTaskWorldState>> SpawnedTaskWorldStates;
 };

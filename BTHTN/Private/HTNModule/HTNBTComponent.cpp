@@ -3,6 +3,7 @@
 
 #include "HTNModule/HTNBTComponent.h"
 #include "HTNModule/HTNTask.h"
+#include "HTNModule/TaskWorldState.h"
 
 
 // Sets default values for this component's properties
@@ -89,5 +90,44 @@ UHTNTask* UHTNBTComponent::GetFirstTaskInPlan()
 {
 	FGameplayTag FirstTagToActive = GetTaskTagToActive();
 	return GetTaskByTag(FirstTagToActive);
+}
+
+void UHTNBTComponent::AddTaskWorldState(UTaskWorldState* WorldState)
+{
+	
+}
+
+void UHTNBTComponent::AddTaskWorldStateByClass(TSubclassOf<UTaskWorldState> WorldStateClass)
+{
+	UTaskWorldState* WorldState = NewObject<UTaskWorldState>(WorldStateClass);
+
+	if ( IsValid(WorldState) == true )
+	{
+		
+	}
+}
+
+void UHTNBTComponent::RemoveTaskWorldState(TSubclassOf<UTaskWorldState> WorldStateClass)
+{
+	UTaskWorldState* NeedToRemove = nullptr;
+	
+	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates)
+	{
+		if (WorldState->GetClass() == WorldStateClass)
+		{
+			NeedToRemove = WorldState;
+			break;
+		}
+	}
+
+	if ( IsValid(NeedToRemove) == true )
+	{
+		SpawnedTaskWorldStates.Remove(NeedToRemove);	
+	}
+}
+
+void UHTNBTComponent::ResetAllTaskWorldStates()
+{
+	SpawnedTaskWorldStates.Empty();
 }
 

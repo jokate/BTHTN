@@ -2,6 +2,3 @@
 
 
 #include "HTNModule/Interface/HTNBTPlanner.h"
-
-
-// Add default functionality here for any IHTNBTPlanner functions that are not pure virtual.

@@ -3,14 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Interface/WorldStateInterface.h"
 #include "HTNTaskConditionalValue.generated.h"
 /**
  * 
  */
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpdatedTaskRelatedValue_Float, FName, KeyName, float, UpdatedValue);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpdatedTaskRelatedValue_Boolean, FName, KeyName, bool, UpdatedValue);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpdatedTaskRelatedValue_Integer, FName, KeyName, int32, UpdatedValue);
 
 UENUM(BlueprintType)
 enum class EHTNTaskRelatedValueType : uint8
@@ -37,6 +34,9 @@ public :
 	UPROPERTY( EditAnywhere, BlueprintReadOnly )
 	EHTNTaskRelatedValueType ValueType = EHTNTaskRelatedValueType::NONE;
 
+	UPROPERTY()
+	TWeakObjectPtr<UObject> OwnerWorldState = nullptr;
+	
 	template<typename T>
 	T GetValue() const {
 		if (Value.IsType<T>())
@@ -59,6 +59,18 @@ public :
 	{
 		return Other.Key == Key;
 	}
+
+	void SetOwner( UObject* WorldState )
+	{
+		OwnerWorldState = WorldState;
+	}
+
+	UObject* GetOwner() const
+	{
+		return OwnerWorldState.Get();
+	}
+	
+	EHTNTaskRelatedValueType GetValueType() const { return ValueType; }
 };
 
 template <typename T>
@@ -97,11 +109,17 @@ struct FTaskRelatedValue_Float : public FTaskRelatedValue
 		
 		if ( CurValue != InValue )
 		{
-			OnUpdatedTaskRelatedValue.Broadcast(Key, InValue);
+			UObject* Owner = GetOwner();
+			
+			if ( IsValid( Owner ) == true )
+			{
+				if (IWorldStateInterface* WorldState = Cast<IWorldStateInterface>(Owner) )
+				{
+					WorldState->UpdateWorldFloatValue( GetKey(), InValue );	
+				}
+			}
 		}
 	}
-
-	FOnUpdatedTaskRelatedValue_Float OnUpdatedTaskRelatedValue;
 };
 
 USTRUCT( BlueprintType )
@@ -128,11 +146,17 @@ struct FTaskRelatedValue_Boolean : public FTaskRelatedValue
 
 		if ( CurValue != InValue )
 		{
-			OnUpdatedTaskRelatedValue.Broadcast(Key, InValue);
+			UObject* Owner = GetOwner();
+			
+			if ( IsValid( Owner ) == true )
+			{
+				if (IWorldStateInterface* WorldState = Cast<IWorldStateInterface>(Owner) )
+				{
+					WorldState->UpdateWorldBooleanValue( GetKey(), InValue );
+				}
+			}
 		}
 	}
-	
-	FOnUpdatedTaskRelatedValue_Boolean OnUpdatedTaskRelatedValue;
 };
 
 USTRUCT( BlueprintType )
@@ -159,11 +183,17 @@ struct FTaskRelatedValue_Int : public FTaskRelatedValue
 
 		if ( CurValue != InValue )
 		{
-			OnUpdatedTaskRelatedValue.Broadcast(Key, InValue);
+			UObject* Owner = GetOwner();
+			
+			if ( IsValid( Owner ) == true )
+			{
+				if (IWorldStateInterface* WorldState = Cast<IWorldStateInterface>(Owner) )
+				{
+					WorldState->UpdateWorldIntegerValue( GetKey(), InValue );
+				}
+			}
 		}
 	}
-	
-	FOnUpdatedTaskRelatedValue_Integer OnUpdatedTaskRelatedValue;
 };
 
 USTRUCT(BlueprintType)

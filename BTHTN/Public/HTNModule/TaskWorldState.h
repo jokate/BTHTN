@@ -4,20 +4,51 @@
 
 #include "CoreMinimal.h"
 #include "HTNTaskConditionalValue.h"
+#include "Interface/WorldStateInterface.h"
 #include "UObject/Object.h"
 #include "TaskWorldState.generated.h"
 
 /**
  * 
  */
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpdatedTaskRelatedValue_Float, FName, KeyName, float, UpdatedValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpdatedTaskRelatedValue_Boolean, FName, KeyName, bool, UpdatedValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpdatedTaskRelatedValue_Integer, FName, KeyName, int32, UpdatedValue);
+
+
 UCLASS()
-class BTHTN_API UTaskWorldState : public UObject
+class BTHTN_API UTaskWorldState : public UObject, public IWorldStateInterface
 {
 	GENERATED_BODY()
 
-	//내부에 있는 멤버들에 대한 정보를 저장해야 합니다.
+public :
+
+	//Need To Update World State Integer Value (Event Callbacks)
+	UFUNCTION()
+	virtual void UpdateWorldIntegerValue( FName KeyName, int32 UpdatedValue );
+
+	UFUNCTION()
+	virtual void UpdateWorldBooleanValue( FName KeyName, bool UpdatedValue );
+
+	UFUNCTION()
+	virtual void UpdateWorldFloatValue( FName KeyName, float UpdatedValue );
+
+protected :
+	//We need to save all data in task related value in this world state
 	void SetupStructProperties();
 	
+protected : 
 	UPROPERTY(VisibleAnywhere)
 	FTaskWorldStateData TaskWorldState;
+
+	UPROPERTY( BlueprintAssignable, BlueprintCallable )
+	FOnUpdatedTaskRelatedValue_Float OnUpdatedTaskRelatedValue_Float;
+
+	UPROPERTY( BlueprintAssignable, BlueprintCallable )
+	FOnUpdatedTaskRelatedValue_Boolean OnUpdatedTaskRelatedValue_Boolean;
+
+	UPROPERTY( BlueprintAssignable, BlueprintCallable )
+	FOnUpdatedTaskRelatedValue_Integer OnUpdatedTaskRelatedValue_Integer;
+	
 };
