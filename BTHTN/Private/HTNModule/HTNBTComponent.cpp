@@ -133,16 +133,3 @@ void UHTNBTComponent::ResetAllTaskWorldStates()
 {
 	SpawnedTaskWorldStates.Empty();
 }
-
-bool UHTNBTComponent::GetWorldStateBooleanValue(FName WorldStateName)
-{
-}
-
-int32 UHTNBTComponent::GetWorldStateIntegerValue(FName WorldStateName)
-{
-}
-
-float UHTNBTComponent::GetWorldStateFloatValue(FName WorldStateName)
-{
-}
-

@@ -28,4 +28,6 @@ public:
 	virtual bool UpdateWorldBooleanValue( FName KeyName, bool UpdatedValue ) { return true; }
 	
 	virtual bool UpdateWorldFloatValue( FName KeyName, float UpdatedValue ) { return true; }
+
+	
 };

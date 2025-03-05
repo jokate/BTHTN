@@ -241,6 +241,42 @@ public :
 
 		return true;
 	}
+
+	bool GetWorldStateBooleanValue( FName WorldStateName, bool& RetVal ) const
+	{
+		if ( WorldState_Boolean.Contains(WorldStateName) == false)
+		{
+			return false;
+		}
+
+		RetVal =  WorldState_Boolean[WorldStateName];
+
+		return true;
+	}
+
+	bool GetWorldStateIntegerValue( FName WorldStateName, int32& RetVal ) const
+	{
+		if ( WorldState_Int32.Contains(WorldStateName) == false )
+		{
+			return false;
+		}
+
+		RetVal = WorldState_Int32[WorldStateName];
+
+		return true;
+	};
+
+	bool GetWorldStateFloatValue( FName WorldStateName, float& RetVal ) const
+	{
+		if ( WorldState_Float.Contains(WorldStateName) == false )
+		{
+			return false;
+		}
+
+		RetVal = WorldState_Float[WorldStateName];
+
+		return true;
+	}
 	
 protected : 
 	UPROPERTY( VisibleAnywhere, Category = "INT" )

@@ -48,6 +48,36 @@ bool UTaskWorldState::UpdateWorldFloatValue(FName KeyName, float UpdatedValue)
 	return true;
 }
 
+bool UTaskWorldState::GetWorldStateBooleanValue(FName WorldStateName, bool& RetVal)
+{
+	if ( TaskWorldState.GetWorldStateBooleanValue(WorldStateName, RetVal) == false )
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool UTaskWorldState::GetWorldStateIntegerValue(FName WorldStateName, int32& RetVal)
+{
+	if ( TaskWorldState.GetWorldStateIntegerValue(WorldStateName, RetVal) == false )
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool UTaskWorldState::GetWorldStateFloatValue(FName WorldStateName, float& RetVal)
+{
+	if ( TaskWorldState.GetWorldStateFloatValue(WorldStateName, RetVal) == false )
+	{
+		return false;
+	}
+
+	return true;
+}
+
 void UTaskWorldState::SetupStructProperties()
 {
 	for (TFieldIterator<FProperty> PropIt(GetClass()); PropIt; ++PropIt)

@@ -62,12 +62,6 @@ public:
 	
 #pragma endregion Task World State
 
-	virtual bool GetWorldStateBooleanValue( FName WorldStateName );
-
-	virtual int32 GetWorldStateIntegerValue( FName WorldStateName );
-
-	virtual float GetWorldStateFloatValue( FName WorldStateName );
-
 protected :
 	
 	UPROPERTY(VisibleAnywhere, Category = "HTN Task | Task To Active")

@@ -34,6 +34,12 @@ public :
 	UFUNCTION()
 	virtual bool UpdateWorldFloatValue( FName KeyName, float UpdatedValue ) override;
 
+	virtual bool GetWorldStateBooleanValue( FName WorldStateName, bool& RetVal );
+
+	virtual bool GetWorldStateIntegerValue( FName WorldStateName, int32& RetVal );
+
+	virtual bool GetWorldStateFloatValue( FName WorldStateName, float& RetVal );
+
 protected :
 	//We need to save all data in task related value in this world state
 	void SetupStructProperties();
