@@ -26,13 +26,13 @@ public :
 
 	//Need To Update World State Integer Value (Event Callbacks)
 	UFUNCTION()
-	virtual void UpdateWorldIntegerValue( FName KeyName, int32 UpdatedValue );
+	virtual void UpdateWorldIntegerValue( FName KeyName, int32 UpdatedValue ) override;
 
 	UFUNCTION()
-	virtual void UpdateWorldBooleanValue( FName KeyName, bool UpdatedValue );
+	virtual void UpdateWorldBooleanValue( FName KeyName, bool UpdatedValue ) override;
 
 	UFUNCTION()
-	virtual void UpdateWorldFloatValue( FName KeyName, float UpdatedValue );
+	virtual void UpdateWorldFloatValue( FName KeyName, float UpdatedValue ) override;
 
 protected :
 	//We need to save all data in task related value in this world state

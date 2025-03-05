@@ -26,13 +26,13 @@ public :
 	virtual void InitializeHTNComponent( class UHTNBTComponent* BTComponent );
 
 	//Do Action To Owner
-	virtual void Action() {};
+	virtual void Action() {}
 
 	//Effect To Owner After Action. (Real Action)
 	virtual void EffectToOwner() {}
 
 	//This function will calculate effect.
-	//this effect will marked in temp world state.
+	//this effect will be marked in temp world state.
 	virtual void SimulateEffectToOwner() {}
 
 	virtual bool IsTagForTask( FGameplayTag& InGameplayTag ) const { return TaskTag == InGameplayTag; }

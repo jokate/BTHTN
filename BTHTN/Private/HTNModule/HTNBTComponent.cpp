@@ -94,7 +94,10 @@ UHTNTask* UHTNBTComponent::GetFirstTaskInPlan()
 
 void UHTNBTComponent::AddTaskWorldState(UTaskWorldState* WorldState)
 {
-	
+	if ( IsValid(WorldState) == true )
+	{
+		SpawnedTaskWorldStates.Add(WorldState);
+	}
 }
 
 void UHTNBTComponent::AddTaskWorldStateByClass(TSubclassOf<UTaskWorldState> WorldStateClass)
@@ -103,7 +106,7 @@ void UHTNBTComponent::AddTaskWorldStateByClass(TSubclassOf<UTaskWorldState> Worl
 
 	if ( IsValid(WorldState) == true )
 	{
-		
+		SpawnedTaskWorldStates.Add(WorldState);
 	}
 }
 
@@ -111,7 +114,7 @@ void UHTNBTComponent::RemoveTaskWorldState(TSubclassOf<UTaskWorldState> WorldSta
 {
 	UTaskWorldState* NeedToRemove = nullptr;
 	
-	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates)
+	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
 	{
 		if (WorldState->GetClass() == WorldStateClass)
 		{
