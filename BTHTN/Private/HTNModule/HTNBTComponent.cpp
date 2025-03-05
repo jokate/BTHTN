@@ -17,12 +17,6 @@ UHTNBTComponent::UHTNBTComponent()
 void UHTNBTComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	for ( UHTNTask* RegisteredHTNTask :  RegisteredTask )
-	{
-		//init owner information to component
-		RegisteredHTNTask->InitializeHTNComponent( this );
-	}
 }
 
 
@@ -33,6 +27,34 @@ void UHTNBTComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 	// Task need to be planned instantly when task tag container is empty.
 	SimulatePlanningTask();
+}
+
+void UHTNBTComponent::RegisterTask(TSubclassOf<UHTNTask> HTNTaskClass )
+{
+	AActor* Owner = GetOwner();
+
+	if ( IsValid(Owner) == false)
+	{
+		UE_LOG(LogTemp, Error, TEXT("UHTNBTComponent::RegisterTask : Owner Is Not Valid"));
+		return;
+	}
+
+	UHTNTask* HTNTask = NewObject<UHTNTask>(Owner, HTNTaskClass);
+
+	if ( IsValid(HTNTask) == false )
+	{
+		UE_LOG(LogTemp, Error, TEXT("UHTNBTComponent::RegisterTask : Task Creation Failed"));
+		return;
+	}
+	
+	if ( RegisteredTask.Contains(HTNTask->GetTaskTag()) == true )
+	{
+		UE_LOG(LogTemp, Error, TEXT("UHTNBTComponent::RegisterTask : Task Tag Is Alreay Defined"));
+		HTNTask->BeginDestroy();
+		return;
+	}
+	HTNTask->InitializeHTNComponent(this);
+	RegisteredTask.Add(HTNTask->GetTaskTag(), HTNTask);
 }
 
 // Simulate Plan.
@@ -54,11 +76,11 @@ void UHTNBTComponent::SimulatePlanningTask()
 
 UHTNTask* UHTNBTComponent::GetTaskByTag(FGameplayTag& TaskTag)
 {
-	for ( UHTNTask* Task : RegisteredTask)
+	for ( TPair<FGameplayTag, UHTNTask*> Task : RegisteredTask)
 	{
-		if ( Task->IsTagForTask(TaskTag) == true )
+		if ( Task.Key == TaskTag )
 		{
-			return Task;
+			return Task.Value;
 		}
 	}
 

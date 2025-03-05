@@ -18,9 +18,16 @@ bool USearchTargetTask::CheckPrecondition()
 	return HasTarget == false;
 }
 
+void USearchTargetTask::Action()
+{
+	UE_LOG(LogTemp, Log, TEXT("Finding Target..."));
+	Super::Action();
+}
+
 //해당 부분은 클래스로 생성된 부분이 있기에 Temp 형태로 시뮬레이팅을 돌리는 게 맞는거로 보임.
 //내부 캐싱이 필요함.
+// 해당 부분은 Simulate에 대한 특징을 지닌 것에 준한다.
 void USearchTargetTask::SimulateEffectToOwner()
 {
-	Super::SimulateEffectToOwner();
+	
 }

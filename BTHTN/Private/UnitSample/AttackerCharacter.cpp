@@ -3,6 +3,7 @@
 
 #include "UnitSample/AttackerCharacter.h"
 
+#include "HTNModule/HTNBTComponent.h"
 #include "UnitSample/HTNBTAIController.h"
 
 
@@ -17,7 +18,21 @@ AAttackerCharacter::AAttackerCharacter()
 void AAttackerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	RegisterTask();
+}
+
+void AAttackerCharacter::RegisterTask()
+{
+	UHTNBTComponent* BTComponent = GetHTNBTComponent();
+	if ( IsValid(BTComponent) == false)
+	{
+		UE_LOG(LogTemp, Error, TEXT("HTN BT Component Is Not Valid : Register Failed"));
+	}
+
+	for ( TSubclassOf<UHTNTask>& HTNTask : HTNTaskClass)
+	{
+		BTComponent->RegisterTask(HTNTask);
+	}
 }
 
 // Called every frame

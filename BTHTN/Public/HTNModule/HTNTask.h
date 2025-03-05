@@ -12,7 +12,7 @@
  */
 
 
-UCLASS(Blueprintable)
+UCLASS(Blueprintable, BlueprintType)
 class BTHTN_API UHTNTask : public UObject
 {
 	GENERATED_BODY()
@@ -42,6 +42,8 @@ public :
 
 	virtual UHTNBTComponent* GetHTNBTComponent() const;
 
+	virtual FGameplayTag GetTaskTag() const { return TaskTag;}
+	
 protected :
 	//On Task Registered Weak Pointer of Owner Will be Allocated.
 	UPROPERTY()

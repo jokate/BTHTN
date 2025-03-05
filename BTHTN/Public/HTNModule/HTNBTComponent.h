@@ -29,6 +29,8 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
+	virtual void RegisterTask( TSubclassOf<UHTNTask> HTNTaskClass );
+
 #pragma region Task Planning
 	// Plan Task.
 	virtual void SimulatePlanningTask();
@@ -73,10 +75,10 @@ protected :
 	
 	UPROPERTY(VisibleAnywhere, Category = "HTN Task | Task To Active")
 	TArray<FGameplayTag> TaskTagsToActive;
-
-	UPROPERTY(EditDefaultsOnly, Category = "HTN Task | Tag To Allocate")
-	TArray<UHTNTask*> RegisteredTask;
-
+	
+	UPROPERTY(VisibleAnywhere, Category = "HTN Task | Tag To Allocate")
+	TMap<FGameplayTag, UHTNTask*> RegisteredTask;
+	
 	UPROPERTY()
 	TArray<TObjectPtr<class UTaskWorldState>> SpawnedTaskWorldStates;
 };

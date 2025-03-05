@@ -16,12 +16,6 @@ class BTHTN_API UAttackerWorldState : public UTaskWorldState
 
 public :
 	UAttackerWorldState();
-
-	virtual void UpdateWorldBooleanValue(FName KeyName, bool UpdatedValue) override;
-
-	virtual void UpdateWorldFloatValue(FName KeyName, float UpdatedValue) override;
-
-	virtual void UpdateWorldIntegerValue(FName KeyName, int32 UpdatedValue) override;
 	
 	UPROPERTY(BlueprintReadWrite, Category = "Attacker World")
 	FTaskRelatedValue_Boolean TargetFound;

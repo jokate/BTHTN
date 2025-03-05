@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class BTHTN_API USearchTargetTask : public UHTNTask
 {
 	GENERATED_BODY()
