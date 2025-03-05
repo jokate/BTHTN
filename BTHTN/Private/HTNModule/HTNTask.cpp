@@ -9,6 +9,8 @@ void UHTNTask::InitializeHTNComponent(UHTNBTComponent* BTComponent)
 	// Need To Allocate To Owner of Component.
 	if (IsValid(BTComponent) == true)
 	{
+		OwnerBTComponent = BTComponent;
+		
 		AActor* ComponentOwnerActor = BTComponent->GetOwner();
 
 		if ( IsValid(ComponentOwnerActor) == true)
@@ -16,4 +18,14 @@ void UHTNTask::InitializeHTNComponent(UHTNBTComponent* BTComponent)
 			OwnerActor = ComponentOwnerActor;
 		}
  	}
+}
+
+AActor* UHTNTask::GetOwner() const
+{
+	return OwnerActor.Get();
+}
+
+UHTNBTComponent* UHTNTask::GetHTNBTComponent() const
+{
+	return OwnerBTComponent.Get();
 }

@@ -23,9 +23,9 @@ class BTHTN_API IWorldStateInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 
-	virtual void UpdateWorldIntegerValue( FName KeyName, int32 UpdatedValue ) {};
+	virtual bool UpdateWorldIntegerValue( FName KeyName, int32 UpdatedValue ) { return true; }
 	
-	virtual void UpdateWorldBooleanValue( FName KeyName, bool UpdatedValue ) {};
+	virtual bool UpdateWorldBooleanValue( FName KeyName, bool UpdatedValue ) { return true; }
 	
-	virtual void UpdateWorldFloatValue( FName KeyName, float UpdatedValue ) {};
+	virtual bool UpdateWorldFloatValue( FName KeyName, float UpdatedValue ) { return true; }
 };

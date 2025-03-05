@@ -12,7 +12,7 @@ AHTNBTAIController::AHTNBTAIController()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	HTNBTComponent->CreateDefaultSubobject<UHTNBTComponent>("HTNBTComponent");
+	HTNBTComponent = CreateDefaultSubobject<UHTNBTComponent>("HTNBTComponent");
 }
 
 // Called when the game starts or when spawned

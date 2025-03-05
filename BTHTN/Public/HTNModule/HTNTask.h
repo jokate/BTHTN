@@ -37,10 +37,17 @@ public :
 
 	virtual bool IsTagForTask( FGameplayTag& InGameplayTag ) const { return TaskTag == InGameplayTag; }
 
-private :
+	virtual AActor* GetOwner() const;
+
+	virtual UHTNBTComponent* GetHTNBTComponent() const;
+
+protected :
 	//On Task Registered Weak Pointer of Owner Will be Allocated.
 	UPROPERTY()
 	TWeakObjectPtr<AActor> OwnerActor;
+
+	UPROPERTY()
+	TWeakObjectPtr<class UHTNBTComponent> OwnerBTComponent;
 
 	//GameplayTag for Task : it will be used for tree search to find possible next tag during planning search
 	UPROPERTY(EditDefaultsOnly)

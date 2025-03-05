@@ -204,22 +204,42 @@ struct FTaskWorldStateData
 public :
 	// We assume that this values will be used to determine action plans.
 	// So this world state will be cached sometimes while blackboardasset is not.
-	void UpdateIntegerValue( FName KeyName, int32 UpdatedValue)
+	bool UpdateIntegerValue( FName KeyName, int32 UpdatedValue)
 	{
+		if ( WorldState_Int32.Contains(KeyName) == false)
+		{
+			return false;
+		}
+
 		int32& NeedToUpdateValue = WorldState_Int32.FindOrAdd(KeyName);
 		NeedToUpdateValue = UpdatedValue;
+
+		return true;
 	}
 
-	void UpdateBooleanValue( FName KeyName, bool UpdatedValue)
+	bool UpdateBooleanValue( FName KeyName, bool UpdatedValue)
 	{
+		if ( WorldState_Boolean.Contains(KeyName) == false)
+		{
+			return false;
+		}
 		bool& NeedToUpdateValue = WorldState_Boolean.FindOrAdd(KeyName);
 		NeedToUpdateValue = UpdatedValue;
+
+		return true;
 	}
 
-	void UpdateFloatValue( FName KeyName, float UpdatedValue )
+	bool UpdateFloatValue( FName KeyName, float UpdatedValue )
 	{
+		if ( WorldState_Float.Contains(KeyName) == false)
+		{
+			return false;
+		}
+		
 		float& NeedToUpdateValue = WorldState_Float.FindOrAdd(KeyName);
 		NeedToUpdateValue = UpdatedValue;
+
+		return true;
 	}
 	
 protected : 

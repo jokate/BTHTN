@@ -3,34 +3,49 @@
 
 #include "HTNModule/TaskWorldState.h"
 
-void UTaskWorldState::UpdateWorldIntegerValue(FName KeyName, int32 UpdatedValue)
+bool UTaskWorldState::UpdateWorldIntegerValue(FName KeyName, int32 UpdatedValue)
 {
-	TaskWorldState.UpdateIntegerValue(KeyName, UpdatedValue);
+	if ( TaskWorldState.UpdateIntegerValue(KeyName, UpdatedValue) == false )
+	{
+		return false;
+	}
 
 	if ( OnUpdatedTaskRelatedValue_Integer.IsBound() == true )
 	{
 		OnUpdatedTaskRelatedValue_Integer.Broadcast(KeyName, UpdatedValue);
 	}
+
+	return true;
 }
 
-void UTaskWorldState::UpdateWorldBooleanValue(FName KeyName, bool UpdatedValue)
+bool UTaskWorldState::UpdateWorldBooleanValue(FName KeyName, bool UpdatedValue)
 {
-	TaskWorldState.UpdateBooleanValue(KeyName, UpdatedValue);
+	if (TaskWorldState.UpdateBooleanValue(KeyName, UpdatedValue) == false )
+	{
+		return false;
+	}
 
 	if ( OnUpdatedTaskRelatedValue_Boolean.IsBound() == true )
 	{
 		OnUpdatedTaskRelatedValue_Boolean.Broadcast(KeyName, UpdatedValue);
 	}
+
+	return true;
 }
 
-void UTaskWorldState::UpdateWorldFloatValue(FName KeyName, float UpdatedValue)
-{
-	TaskWorldState.UpdateFloatValue(KeyName, UpdatedValue);
+bool UTaskWorldState::UpdateWorldFloatValue(FName KeyName, float UpdatedValue)
+{	
+	if ( TaskWorldState.UpdateFloatValue(KeyName, UpdatedValue) == false )
+	{
+		return false;
+	}
 
 	if ( OnUpdatedTaskRelatedValue_Float.IsBound() == true )
 	{
 		OnUpdatedTaskRelatedValue_Float.Broadcast(KeyName, UpdatedValue);
 	}
+
+	return true;
 }
 
 void UTaskWorldState::SetupStructProperties()
@@ -48,7 +63,6 @@ void UTaskWorldState::SetupStructProperties()
 		{
 			continue;
 		}
-		
 		
 		RelatedValue->SetOwner( this );
 		EHTNTaskRelatedValueType TaskRelatedValueType = RelatedValue->GetValueType();
