@@ -16,4 +16,8 @@ class BTHTN_API USearchTargetTask : public UHTNTask
 
 public :
 	virtual bool CheckPrecondition() override;
+
+	virtual void Action() override;
+
+	virtual void SimulateEffectToOwner() override;
 };

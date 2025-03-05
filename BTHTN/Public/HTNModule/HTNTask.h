@@ -19,6 +19,7 @@ class BTHTN_API UHTNTask : public UObject
 
 public :
 	//Precondition Checker
+	//Notice : Precondition should return true to activate HTN Task.
 	virtual bool CheckPrecondition() { return true; }
 
 	//Need To Register HTN Component To Active

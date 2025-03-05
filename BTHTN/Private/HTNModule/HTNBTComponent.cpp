@@ -133,3 +133,64 @@ void UHTNBTComponent::ResetAllTaskWorldStates()
 {
 	SpawnedTaskWorldStates.Empty();
 }
+
+int32 UHTNBTComponent::GetWorldStateProperty_Int(FName PropertyName)
+{
+	int32 RetVal = -1;
+	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
+	{
+		if ( IsValid(WorldState) == false )
+		{
+			continue;
+		}
+		
+		if (WorldState->GetWorldStateIntegerValue(PropertyName, RetVal) == true)
+		{
+			break;
+		}
+	}
+
+	return RetVal;
+}
+
+// Caution : Boolean Value Can be false by Default Value. So you NEED TO be careful when you are handling boolean Property.
+bool UHTNBTComponent::GetWorldStateProperty_Bool(FName PropertyName)
+{
+	bool RetVal = false;
+	
+	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
+	{
+		if ( IsValid(WorldState) == false )
+		{
+			continue;
+		}
+		
+		if (WorldState->GetWorldStateBooleanValue(PropertyName, RetVal) == true)
+		{
+			break;
+		}
+	}
+
+	return RetVal;
+}
+
+
+float UHTNBTComponent::GetWorldStateProperty_Float(FName PropertyName)
+{
+	float RetVal = FLT_MAX;
+	
+	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
+	{
+		if ( IsValid(WorldState) == false )
+		{
+			continue;
+		}
+		
+		if (WorldState->GetWorldStateFloatValue(PropertyName, RetVal) == true)
+		{
+			break;
+		}
+	}
+
+	return RetVal;
+}

@@ -2,8 +2,25 @@
 
 
 #include "UnitSample/Tasks/SearchTargetTask.h"
+#include "HTNModule/HTNBTComponent.h"
 
 bool USearchTargetTask::CheckPrecondition()
 {
-	return true;
+	UHTNBTComponent* HTNBTComponent = GetHTNBTComponent();
+
+	if ( IsValid(HTNBTComponent) == false )
+	{
+		return false;
+	}
+
+	bool HasTarget = HTNBTComponent->GetWorldStateProperty_Bool("HasTarget");
+
+	return HasTarget == false;
+}
+
+//해당 부분은 클래스로 생성된 부분이 있기에 Temp 형태로 시뮬레이팅을 돌리는 게 맞는거로 보임.
+//내부 캐싱이 필요함.
+void USearchTargetTask::SimulateEffectToOwner()
+{
+	Super::SimulateEffectToOwner();
 }
