@@ -34,12 +34,14 @@ public :
 	UFUNCTION()
 	virtual bool UpdateWorldFloatValue( FName KeyName, float UpdatedValue ) override;
 
+	//Original Values
 	virtual bool GetWorldStateBooleanValue( FName WorldStateName, bool& RetVal );
 
 	virtual bool GetWorldStateIntegerValue( FName WorldStateName, int32& RetVal );
 
 	virtual bool GetWorldStateFloatValue( FName WorldStateName, float& RetVal );
 
+	// Simulation Value.
 	UFUNCTION()
 	virtual void UpdateWorldDeltaIntegerValue( FName KeyName, int32 SimulatedValue, bool IsAdded );
 
@@ -48,6 +50,12 @@ public :
 
 	UFUNCTION()
 	virtual void UpdateWorldDeltaFloatValue( FName KeyName, float SimulatedValue, bool IsAdded );
+	
+	virtual bool GetWorldSimulateStateBooleanValue( FName WorldStateName, bool& RetVal );
+
+	virtual bool GetWorldSimulateIntegerValue( FName WorldStateName, int32& RetVal );
+
+	virtual bool GetWorldSimulateFloatValue( FName WorldStateName, float& RetVal );
 	
 protected :
 
