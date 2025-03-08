@@ -40,7 +40,17 @@ public :
 
 	virtual bool GetWorldStateFloatValue( FName WorldStateName, float& RetVal );
 
+	UFUNCTION()
+	virtual void UpdateWorldDeltaIntegerValue( FName KeyName, int32 SimulatedValue, bool IsAdded );
+
+	UFUNCTION()
+	virtual void UpdateWorldDeltaBooleanValue( FName KeyName, bool IsAdded, bool SimulatedValue = false );
+
+	UFUNCTION()
+	virtual void UpdateWorldDeltaFloatValue( FName KeyName, float SimulatedValue, bool IsAdded );
+	
 protected :
+
 	//We need to save all data in task related value in this world state
 	void SetupStructProperties();
 	
@@ -48,6 +58,9 @@ protected :
 	UPROPERTY(VisibleAnywhere)
 	FTaskWorldStateData TaskWorldState;
 
+	UPROPERTY( VisibleAnywhere )
+	FTaskWorldStateData TaskWorldStateDelta;
+	
 	UPROPERTY( BlueprintAssignable, BlueprintCallable )
 	FOnUpdatedTaskRelatedValue_Float OnUpdatedTaskRelatedValue_Float;
 

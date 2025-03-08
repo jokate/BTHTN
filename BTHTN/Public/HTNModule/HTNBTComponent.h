@@ -52,6 +52,8 @@ public:
 	// We need to check running plan because of external factor.
 	virtual UHTNTask* GetFirstTaskInPlan();
 
+	virtual UHTNTask* GetMatchPreconditionTask();
+
 #pragma region Task World State
 	
 	virtual void AddTaskWorldState(UTaskWorldState* WorldState);

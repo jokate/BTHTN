@@ -78,6 +78,39 @@ bool UTaskWorldState::GetWorldStateFloatValue(FName WorldStateName, float& RetVa
 	return true;
 }
 
+void UTaskWorldState::UpdateWorldDeltaIntegerValue(FName KeyName, int32 SimulatedValue, bool IsAdded)
+{
+	int32 CurrentValue = 0;
+
+	TaskWorldStateDelta.GetWorldStateIntegerValue(KeyName, CurrentValue );
+
+	int32 CalculatedValue = IsAdded ? CurrentValue + SimulatedValue : CurrentValue - SimulatedValue;
+	TaskWorldStateDelta.UpdateIntegerValue(KeyName, CalculatedValue);
+}
+
+// Boolean operate differ
+void UTaskWorldState::UpdateWorldDeltaBooleanValue(FName KeyName, bool IsAdded, bool SimulatedValue )
+{
+	if ( IsAdded == true )
+	{
+		TaskWorldStateDelta.UpdateBooleanValue(KeyName, SimulatedValue);
+	}
+	else
+	{
+		TaskWorldStateDelta.RemoveBooleanValue(KeyName);
+	}
+}
+
+void UTaskWorldState::UpdateWorldDeltaFloatValue(FName KeyName, float SimulatedValue, bool IsAdded)
+{
+	float CurrentValue = 0.f;
+
+	TaskWorldStateDelta.GetWorldStateFloatValue(KeyName, CurrentValue);
+
+	float CalculatedValue = IsAdded ? CurrentValue + SimulatedValue : CurrentValue - SimulatedValue;
+	TaskWorldStateDelta.UpdateFloatValue(KeyName, CalculatedValue);
+}
+
 void UTaskWorldState::SetupStructProperties()
 {
 	for (TFieldIterator<FProperty> PropIt(GetClass()); PropIt; ++PropIt)

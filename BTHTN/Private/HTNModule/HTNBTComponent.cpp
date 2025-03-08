@@ -70,13 +70,25 @@ void UHTNBTComponent::SimulatePlanningTask()
 	TArray<FGameplayTag> TempTaskGameplayTag;
 
 	// Search Function.
+	// 
+	UHTNTask* Task = GetMatchPreconditionTask();
+	TempTaskGameplayTag.Add(Task->GetTaskTag());
 
+	TArray<FGameplayTag> TaskGameplayTag;
+	Task->GetPossibleNextTag().GetGameplayTagArray(TaskGameplayTag);
+
+	while ( TaskGameplayTag.Num() > 0 )
+	{
+		
+	}
+	
+	
 	TaskTagsToActive = TempTaskGameplayTag;
 }
 
 UHTNTask* UHTNBTComponent::GetTaskByTag(FGameplayTag& TaskTag)
 {
-	for ( TPair<FGameplayTag, UHTNTask*> Task : RegisteredTask)
+	for ( TPair<FGameplayTag, UHTNTask*> Task : RegisteredTask )
 	{
 		if ( Task.Key == TaskTag )
 		{
@@ -112,6 +124,24 @@ UHTNTask* UHTNBTComponent::GetFirstTaskInPlan()
 {
 	FGameplayTag FirstTagToActive = GetTaskTagToActive();
 	return GetTaskByTag(FirstTagToActive);
+}
+
+UHTNTask* UHTNBTComponent::GetMatchPreconditionTask()
+{
+	UHTNTask* MatchTask = nullptr;
+	for ( TPair<FGameplayTag, UHTNTask*> Task : RegisteredTask )
+	{
+		UHTNTask* TaskValue = Task.Value;
+
+		// if first Match 
+		if ( IsValid( TaskValue ) == true && MatchTask->CheckPrecondition() == true )
+		{
+			MatchTask = TaskValue;
+			break;
+		}
+	}
+
+	return MatchTask;
 }
 
 void UHTNBTComponent::AddTaskWorldState(UTaskWorldState* WorldState)

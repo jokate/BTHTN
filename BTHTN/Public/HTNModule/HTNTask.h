@@ -42,13 +42,16 @@ public :
 
 	virtual UHTNBTComponent* GetHTNBTComponent() const;
 
-	virtual FGameplayTag GetTaskTag() const { return TaskTag;}
+	virtual FGameplayTag GetTaskTag() const { return TaskTag; }
+
+	virtual FGameplayTagContainer& GetPossibleNextTag() { return PossibleNextTags; }
 	
 protected :
+	
 	//On Task Registered Weak Pointer of Owner Will be Allocated.
 	UPROPERTY()
 	TWeakObjectPtr<AActor> OwnerActor;
-
+	
 	UPROPERTY()
 	TWeakObjectPtr<class UHTNBTComponent> OwnerBTComponent;
 
@@ -58,7 +61,7 @@ protected :
 
 	// Possible Task Tag : if planning task finished, planner will find next task by this tags.
 	UPROPERTY(EditDefaultsOnly)
-	FGameplayTag PossibleNextTags;
+	FGameplayTagContainer PossibleNextTags;
 
 	//Todo. Cost function need to declared because of flexibility.
 };

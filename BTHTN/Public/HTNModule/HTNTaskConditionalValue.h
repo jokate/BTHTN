@@ -206,11 +206,6 @@ public :
 	// So this world state will be cached sometimes while blackboardasset is not.
 	bool UpdateIntegerValue( FName KeyName, int32 UpdatedValue)
 	{
-		if ( WorldState_Int32.Contains(KeyName) == false)
-		{
-			return false;
-		}
-
 		int32& NeedToUpdateValue = WorldState_Int32.FindOrAdd(KeyName);
 		NeedToUpdateValue = UpdatedValue;
 
@@ -219,10 +214,6 @@ public :
 
 	bool UpdateBooleanValue( FName KeyName, bool UpdatedValue)
 	{
-		if ( WorldState_Boolean.Contains(KeyName) == false)
-		{
-			return false;
-		}
 		bool& NeedToUpdateValue = WorldState_Boolean.FindOrAdd(KeyName);
 		NeedToUpdateValue = UpdatedValue;
 
@@ -231,11 +222,6 @@ public :
 
 	bool UpdateFloatValue( FName KeyName, float UpdatedValue )
 	{
-		if ( WorldState_Float.Contains(KeyName) == false)
-		{
-			return false;
-		}
-		
 		float& NeedToUpdateValue = WorldState_Float.FindOrAdd(KeyName);
 		NeedToUpdateValue = UpdatedValue;
 
@@ -244,38 +230,25 @@ public :
 
 	bool GetWorldStateBooleanValue( FName WorldStateName, bool& RetVal ) const
 	{
-		if ( WorldState_Boolean.Contains(WorldStateName) == false)
-		{
-			return false;
-		}
-
 		RetVal =  WorldState_Boolean[WorldStateName];
-
 		return true;
 	}
 
 	bool GetWorldStateIntegerValue( FName WorldStateName, int32& RetVal ) const
 	{
-		if ( WorldState_Int32.Contains(WorldStateName) == false )
-		{
-			return false;
-		}
-
 		RetVal = WorldState_Int32[WorldStateName];
-
 		return true;
 	};
 
 	bool GetWorldStateFloatValue( FName WorldStateName, float& RetVal ) const
 	{
-		if ( WorldState_Float.Contains(WorldStateName) == false )
-		{
-			return false;
-		}
-
 		RetVal = WorldState_Float[WorldStateName];
-
 		return true;
+	}
+
+	void RemoveBooleanValue( FName KeyName )
+	{
+		WorldState_Boolean.Remove(KeyName);
 	}
 	
 protected : 
