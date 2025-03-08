@@ -72,19 +72,58 @@ void UHTNBTComponent::SimulatePlanningTask()
 	// Search Function.
 	// 
 	UHTNTask* Task = GetMatchPreconditionTask();
-	TempTaskGameplayTag.Add(Task->GetTaskTag());
 
-	TArray<FGameplayTag> TaskGameplayTag;
-	Task->GetPossibleNextTag().GetGameplayTagArray(TaskGameplayTag);
-
-	while ( TaskGameplayTag.Num() > 0 )
-	{
-		
-	}
-	
+	DoDepthSearch(Task->GetTaskTag(), TempTaskGameplayTag);
 	
 	TaskTagsToActive = TempTaskGameplayTag;
 }
+
+bool UHTNBTComponent::DoDepthSearch(FGameplayTag TaskStack, TArray<FGameplayTag>& TaskSequence)
+{
+	FGameplayTag LastTag = TaskSequence.Last();
+	UHTNTask* Task = GetTaskByTag( LastTag );
+
+	if ( IsValid(Task) == false )
+	{
+		return false;
+	}
+
+	if ( Task->CheckPrecondition() == false )
+	{
+		return false;
+	}
+
+	TArray<FGameplayTag> NextTags;
+	Task->GetPossibleNextTag().GetGameplayTagArray(NextTags);
+	ShuffleTagArray(NextTags);
+
+	bool IsSuccess = false;
+	for (FGameplayTag& NextTag : NextTags)
+	{
+		UHTNTask* NextTask = GetTaskByTag(NextTag);
+			
+		if ( IsValid(NextTask) == true )
+		{
+			 if ( DoDepthSearch(NextTask->GetTaskTag(), TaskSequence) == true )
+			 {
+			 	IsSuccess = true;
+			 	break;	
+			 }
+			else
+			{
+				TaskSequence.RemoveAt(TaskSequence.Num() - 1);
+			}
+		}
+	}
+
+	if ( IsSuccess == false )
+	{
+		TaskSequence.RemoveAt(TaskSequence.Num() - 1);
+	}
+
+	return IsSuccess;
+}
+
 
 UHTNTask* UHTNBTComponent::GetTaskByTag(FGameplayTag& TaskTag)
 {
@@ -142,6 +181,24 @@ UHTNTask* UHTNBTComponent::GetMatchPreconditionTask()
 	}
 
 	return MatchTask;
+}
+
+void UHTNBTComponent::ShuffleTagArray(TArray<FGameplayTag>& ShuffleArray)
+{
+	if ( ShuffleArray.Num() > 0 )
+	{
+		int32 LastIndex = ShuffleArray.Num() - 1;
+
+		for ( int32 i = 0; i <= LastIndex; i++ )
+		{
+			int32 Index = FMath::RandRange(0, LastIndex);
+
+			if ( i != Index)
+			{
+				ShuffleArray.Swap(i, Index);
+			}
+		}
+	}
 }
 
 void UHTNBTComponent::AddTaskWorldState(UTaskWorldState* WorldState)

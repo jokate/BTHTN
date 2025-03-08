@@ -54,6 +54,10 @@ public:
 
 	virtual UHTNTask* GetMatchPreconditionTask();
 
+	virtual void ShuffleTagArray( TArray<FGameplayTag>& ShuffleArray );
+
+	virtual bool DoDepthSearch(FGameplayTag TaskStack, TArray<FGameplayTag>& TaskSequence);
+
 #pragma region Task World State
 	
 	virtual void AddTaskWorldState(UTaskWorldState* WorldState);
@@ -90,3 +94,4 @@ protected :
 	UPROPERTY()
 	TArray<TObjectPtr<class UTaskWorldState>> SpawnedTaskWorldStates;
 };
+
