@@ -56,7 +56,7 @@ public:
 
 	virtual void ShuffleTagArray( TArray<FGameplayTag>& ShuffleArray );
 
-	virtual bool DoDepthSearch(FGameplayTag TaskStack, TArray<FGameplayTag>& TaskSequence);
+	virtual bool DoDepthSearch(FGameplayTag TaskSearchTag, TArray<FGameplayTag>& TaskSequence);
 
 #pragma region Task World State
 	

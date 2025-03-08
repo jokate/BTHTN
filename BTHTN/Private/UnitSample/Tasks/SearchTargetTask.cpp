@@ -13,7 +13,7 @@ bool USearchTargetTask::CheckPrecondition()
 		return false;
 	}
 
-	bool HasTarget = HTNBTComponent->GetWorldStateProperty_Bool("HasTarget");
+	bool HasTarget = HTNBTComponent->GetSimulatedProperty_Bool("HasTarget");
 
 	return HasTarget == false;
 }
@@ -36,5 +36,17 @@ void USearchTargetTask::SimulateEffectToOwner()
 		return;
 	}
 	
-	HTNBTComponent->AddWorldSimulatedProperty_Float("HasTarget", true, true);
+	HTNBTComponent->AddWorldSimulatedProperty_Bool("HasTarget", true, true);
+}
+
+void USearchTargetTask::AfterSimulateEffectToOwner()
+{
+	UHTNBTComponent* HTNBTComponent = GetHTNBTComponent();
+
+	if ( IsValid(HTNBTComponent) == false )
+	{
+		return;
+	}
+	
+	HTNBTComponent->AddWorldSimulatedProperty_Bool("HasTarget", true, false);
 }

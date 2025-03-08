@@ -67,21 +67,29 @@ void UHTNBTComponent::SimulatePlanningTask()
 		return;
 	}
 	
+	UHTNTask* Task = GetMatchPreconditionTask();
+
+	if ( IsValid(Task) == false)
+	{
+		return;
+	}
+
 	TArray<FGameplayTag> TempTaskGameplayTag;
 
 	// Search Function.
 	// 
-	UHTNTask* Task = GetMatchPreconditionTask();
-
-	DoDepthSearch(Task->GetTaskTag(), TempTaskGameplayTag);
+	
+	if ( DoDepthSearch(Task->GetTaskTag(), TempTaskGameplayTag) == true )
+	{
+		TempTaskGameplayTag.Add(Task->GetTaskTag());
+	} 
 	
 	TaskTagsToActive = TempTaskGameplayTag;
 }
 
-bool UHTNBTComponent::DoDepthSearch(FGameplayTag TaskStack, TArray<FGameplayTag>& TaskSequence)
+bool UHTNBTComponent::DoDepthSearch(FGameplayTag TaskSearchTag, TArray<FGameplayTag>& TaskSequence)
 {
-	FGameplayTag LastTag = TaskSequence.Last();
-	UHTNTask* Task = GetTaskByTag( LastTag );
+	UHTNTask* Task = GetTaskByTag( TaskSearchTag );
 
 	if ( IsValid(Task) == false )
 	{
@@ -97,6 +105,11 @@ bool UHTNBTComponent::DoDepthSearch(FGameplayTag TaskStack, TArray<FGameplayTag>
 	Task->GetPossibleNextTag().GetGameplayTagArray(NextTags);
 	ShuffleTagArray(NextTags);
 
+	if ( NextTags.Num() == 0 )
+	{
+		return true;
+	}
+	
 	bool IsSuccess = false;
 	for (FGameplayTag& NextTag : NextTags)
 	{
@@ -104,15 +117,14 @@ bool UHTNBTComponent::DoDepthSearch(FGameplayTag TaskStack, TArray<FGameplayTag>
 			
 		if ( IsValid(NextTask) == true )
 		{
-			 if ( DoDepthSearch(NextTask->GetTaskTag(), TaskSequence) == true )
-			 {
-			 	IsSuccess = true;
-			 	break;	
-			 }
-			else
+			//성공 케이스가 하나 나오면 바로 break.
+			if ( DoDepthSearch(NextTask->GetTaskTag(), TaskSequence) == true )
 			{
-				TaskSequence.RemoveAt(TaskSequence.Num() - 1);
+				IsSuccess = true;
+			 	break;	
 			}
+			
+			TaskSequence.RemoveAt(TaskSequence.Num() - 1);
 		}
 	}
 
@@ -173,7 +185,7 @@ UHTNTask* UHTNBTComponent::GetMatchPreconditionTask()
 		UHTNTask* TaskValue = Task.Value;
 
 		// if first Match 
-		if ( IsValid( TaskValue ) == true && MatchTask->CheckPrecondition() == true )
+		if ( IsValid( TaskValue ) == true && TaskValue->CheckPrecondition() == true )
 		{
 			MatchTask = TaskValue;
 			break;

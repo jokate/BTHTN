@@ -36,6 +36,8 @@ public :
 	//this effect will be marked in temp world state.
 	virtual void SimulateEffectToOwner() {}
 
+	virtual void AfterSimulateEffectToOwner() {}
+
 	virtual bool IsTagForTask( FGameplayTag& InGameplayTag ) const { return TaskTag == InGameplayTag; }
 
 	virtual AActor* GetOwner() const;

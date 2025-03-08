@@ -20,4 +20,6 @@ public :
 	virtual void Action() override;
 
 	virtual void SimulateEffectToOwner() override;
+
+	virtual void AfterSimulateEffectToOwner() override;
 };
