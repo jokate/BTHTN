@@ -195,6 +195,11 @@ int32 UHTNBTComponent::GetWorldStateProperty_Int(FName PropertyName)
 		{
 			continue;
 		}
+
+		if ( WorldState->IsPropertyDefined(PropertyName) == false)
+		{
+			continue;
+		}
 		
 		if (WorldState->GetWorldStateIntegerValue(PropertyName, RetVal) == true)
 		{
@@ -213,6 +218,11 @@ bool UHTNBTComponent::GetWorldStateProperty_Bool(FName PropertyName)
 	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
 	{
 		if ( IsValid(WorldState) == false )
+		{
+			continue;
+		}
+
+		if ( WorldState->IsPropertyDefined(PropertyName) == false)
 		{
 			continue;
 		}
@@ -237,6 +247,11 @@ float UHTNBTComponent::GetWorldStateProperty_Float(FName PropertyName)
 		{
 			continue;
 		}
+
+		if ( WorldState->IsPropertyDefined(PropertyName) == false)
+		{
+			continue;
+		}
 		
 		if (WorldState->GetWorldStateFloatValue(PropertyName, RetVal) == true)
 		{
@@ -246,3 +261,130 @@ float UHTNBTComponent::GetWorldStateProperty_Float(FName PropertyName)
 
 	return RetVal;
 }
+
+int32 UHTNBTComponent::GetSimulatedProperty_Int(FName PropertyName)
+{
+	int32 RetVal = -1;
+	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
+	{
+		if ( IsValid(WorldState) == false )
+		{
+			continue;
+		}
+		
+		if ( WorldState->IsPropertyDefined(PropertyName) == false)
+		{
+			continue;
+		}
+		
+		if (WorldState->GetWorldSimulateIntegerValue(PropertyName, RetVal) == true)
+		{
+			break;
+		}
+	}
+
+	return RetVal;
+}
+
+bool UHTNBTComponent::GetSimulatedProperty_Bool(FName PropertyName)
+{
+	bool RetVal = false;
+	
+	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
+	{
+		if ( IsValid(WorldState) == false )
+		{
+			continue;
+		}
+
+		if ( WorldState->IsPropertyDefined(PropertyName) == false)
+		{
+			continue;
+		}
+		
+		if ( WorldState->GetWorldSimulateBooleanValue(PropertyName, RetVal) == true )
+		{
+			break;
+		}
+	}
+
+	return RetVal;
+}
+
+float UHTNBTComponent::GetSimulatedProperty_Float(FName PropertyName)
+{
+	float RetVal = FLT_MAX;
+	
+	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
+	{
+		if ( IsValid(WorldState) == false )
+		{
+			continue;
+		}
+
+		if ( WorldState->IsPropertyDefined(PropertyName) == false)
+		{
+			continue;
+		}
+		
+		if (WorldState->GetWorldSimulateFloatValue(PropertyName, RetVal) == true)
+		{
+			break;
+		}
+	}
+
+	return RetVal;
+}
+
+// We Assume that World State Already Has Defined Property
+void UHTNBTComponent::AddWorldSimulatedProperty_Float(FName PropertyName, float Value, bool IsAdded )
+{
+	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
+	{
+		if ( IsValid(WorldState) == false )
+		{
+			continue;
+		}
+
+		if ( WorldState->IsPropertyDefined(PropertyName) == true )
+		{
+			WorldState->UpdateWorldDeltaFloatValue(PropertyName, Value, IsAdded );
+			break;
+		}
+	}
+}
+
+void UHTNBTComponent::AddWorldSimulatedProperty_Int(FName PropertyName, int32 Value, bool IsAdded )
+{
+	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
+	{
+		if ( IsValid(WorldState) == false )
+		{
+			continue;
+		}
+
+		if ( WorldState->IsPropertyDefined(PropertyName) == true )
+		{
+			WorldState->UpdateWorldDeltaIntegerValue(PropertyName, Value, IsAdded);
+			break;
+		}
+	}
+}
+
+void UHTNBTComponent::AddWorldSimulatedProperty_Bool(FName PropertyName, bool Value, bool IsAdded )
+{
+	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
+	{
+		if ( IsValid(WorldState) == false )
+		{
+			continue;
+		}
+
+		if ( WorldState->IsPropertyDefined(PropertyName) == true )
+		{
+			WorldState->UpdateWorldDeltaBooleanValue(PropertyName, IsAdded, Value );
+			break;
+		}
+	}
+}
+

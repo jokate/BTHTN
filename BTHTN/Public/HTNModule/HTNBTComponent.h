@@ -68,10 +68,16 @@ public:
 
 	// World Property Getter
 	virtual int32 GetWorldStateProperty_Int( FName PropertyName );
-
 	virtual bool GetWorldStateProperty_Bool( FName PropertyName );
-
 	virtual float GetWorldStateProperty_Float( FName PropertyName );
+
+	virtual int32 GetSimulatedProperty_Int( FName PropertyName );
+	virtual bool GetSimulatedProperty_Bool( FName PropertyName );
+	virtual float GetSimulatedProperty_Float( FName PropertyName );
+
+	virtual void AddWorldSimulatedProperty_Float( FName PropertyName, float Value, bool IsAdded );
+	virtual void AddWorldSimulatedProperty_Int( FName PropertyName, int32 Value, bool IsAdded );
+	virtual void AddWorldSimulatedProperty_Bool( FName PropertyName, bool Value, bool IsAdded );
 	
 protected :
 	

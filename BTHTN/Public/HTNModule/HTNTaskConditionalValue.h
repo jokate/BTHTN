@@ -204,8 +204,28 @@ struct FTaskWorldStateData
 public :
 	// We assume that this values will be used to determine action plans.
 	// So this world state will be cached sometimes while blackboardasset is not.
+	void AddIntegerValue( FName KeyName, int32 InValue )
+	{
+		WorldState_Int32.Add(KeyName, InValue);
+	}
+
+	void AddFloatValue( FName KeyName, float InValue)
+	{
+		WorldState_Float.Add(KeyName, InValue);
+	}
+
+	void AddBooleanValue( FName KeyName, bool InValue )
+	{
+		WorldState_Boolean.Add(KeyName, InValue);
+	}
+	
 	bool UpdateIntegerValue( FName KeyName, int32 UpdatedValue)
 	{
+		if ( WorldState_Int32.Contains(KeyName) == false)
+		{
+			return false;	
+		}
+		
 		int32& NeedToUpdateValue = WorldState_Int32.FindOrAdd(KeyName);
 		NeedToUpdateValue = UpdatedValue;
 
@@ -214,6 +234,11 @@ public :
 
 	bool UpdateBooleanValue( FName KeyName, bool UpdatedValue)
 	{
+		if ( WorldState_Boolean.Contains(KeyName) == false )
+		{
+			return false;
+		}
+		
 		bool& NeedToUpdateValue = WorldState_Boolean.FindOrAdd(KeyName);
 		NeedToUpdateValue = UpdatedValue;
 
@@ -222,6 +247,11 @@ public :
 
 	bool UpdateFloatValue( FName KeyName, float UpdatedValue )
 	{
+		if ( WorldState_Boolean.Contains(KeyName) == false )
+        {
+        	return false;
+        }
+
 		float& NeedToUpdateValue = WorldState_Float.FindOrAdd(KeyName);
 		NeedToUpdateValue = UpdatedValue;
 
@@ -230,18 +260,33 @@ public :
 
 	bool GetWorldStateBooleanValue( FName WorldStateName, bool& RetVal ) const
 	{
+		if ( WorldState_Boolean.Contains( WorldStateName ) == false )
+		{
+			return false;
+		}
+		
 		RetVal =  WorldState_Boolean[WorldStateName];
 		return true;
 	}
 
 	bool GetWorldStateIntegerValue( FName WorldStateName, int32& RetVal ) const
 	{
+		if ( WorldState_Int32.Contains(WorldStateName) == false )
+		{
+			return false;
+		}
+		
 		RetVal = WorldState_Int32[WorldStateName];
 		return true;
 	};
 
 	bool GetWorldStateFloatValue( FName WorldStateName, float& RetVal ) const
 	{
+		if ( WorldState_Float.Contains(WorldStateName) == false )
+		{
+			return false;
+		}
+		
 		RetVal = WorldState_Float[WorldStateName];
 		return true;
 	}
@@ -249,6 +294,13 @@ public :
 	void RemoveBooleanValue( FName KeyName )
 	{
 		WorldState_Boolean.Remove(KeyName);
+	}
+
+	bool IsPropertyDefined( FName KeyName ) const
+	{
+		return WorldState_Int32.Contains( KeyName )
+		|| WorldState_Float.Contains( KeyName )
+		|| WorldState_Boolean.Contains( KeyName );
 	}
 	
 protected : 

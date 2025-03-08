@@ -3,6 +3,21 @@
 
 #include "HTNModule/TaskWorldState.h"
 
+void UTaskWorldState::AddWorldStateIntegerValue(FName KeyName, int32 Value)
+{
+	TaskWorldState.AddIntegerValue(KeyName, Value);
+}
+
+void UTaskWorldState::AddWorldStateFloatValue(FName KeyName, float Value)
+{
+	TaskWorldState.AddFloatValue(KeyName, Value);
+}
+
+void UTaskWorldState::AddWorldStateBooleanValue(FName KeyName, bool Value)
+{
+	TaskWorldState.AddBooleanValue( KeyName, Value );
+}
+
 bool UTaskWorldState::UpdateWorldIntegerValue(FName KeyName, int32 UpdatedValue)
 {
 	if ( TaskWorldState.UpdateIntegerValue(KeyName, UpdatedValue) == false )
@@ -78,6 +93,11 @@ bool UTaskWorldState::GetWorldStateFloatValue(FName WorldStateName, float& RetVa
 	return true;
 }
 
+bool UTaskWorldState::IsPropertyDefined(FName PropertyName) const
+{
+	return TaskWorldStateDelta.IsPropertyDefined(PropertyName);
+}
+
 void UTaskWorldState::UpdateWorldDeltaIntegerValue(FName KeyName, int32 SimulatedValue, bool IsAdded)
 {
 	int32 CurrentValue = 0;
@@ -112,9 +132,9 @@ void UTaskWorldState::UpdateWorldDeltaFloatValue(FName KeyName, float SimulatedV
 }
 
 // boolean operate differently.
-bool UTaskWorldState::GetWorldSimulateStateBooleanValue(FName WorldStateName, bool& RetVal)
+bool UTaskWorldState::GetWorldSimulateBooleanValue(FName WorldStateName, bool& RetVal)
 {
-	if ( TaskWorldStateDelta.GetWorldStateBooleanValue( WorldStateName, RetVal) == false)
+	if ( TaskWorldStateDelta.GetWorldStateBooleanValue( WorldStateName, RetVal ) == false)
 	{
 		return false;
 	}
@@ -125,10 +145,16 @@ bool UTaskWorldState::GetWorldSimulateStateBooleanValue(FName WorldStateName, bo
 bool UTaskWorldState::GetWorldSimulateIntegerValue(FName WorldStateName, int32& RetVal)
 {
 	int32 OriginalValue = 0;
-	TaskWorldState.GetWorldStateIntegerValue(WorldStateName, OriginalValue);
+	if ( GetWorldStateIntegerValue(WorldStateName, OriginalValue ) == false )
+	{
+		return false;
+	}
 
 	int32 DeltaValue = 0;
-	TaskWorldStateDelta.GetWorldStateIntegerValue(WorldStateName, DeltaValue);
+	if ( TaskWorldStateDelta.GetWorldStateIntegerValue(WorldStateName, DeltaValue) == false )
+	{
+		return false;
+	}
 	
 	RetVal = OriginalValue + DeltaValue;
 
@@ -138,10 +164,16 @@ bool UTaskWorldState::GetWorldSimulateIntegerValue(FName WorldStateName, int32& 
 bool UTaskWorldState::GetWorldSimulateFloatValue(FName WorldStateName, float& RetVal)
 {
 	float OriginalValue = 0;
-	TaskWorldState.GetWorldStateFloatValue(WorldStateName, OriginalValue);
+	if ( GetWorldStateFloatValue(WorldStateName, OriginalValue ) == false )
+	{
+		return false;
+	}
 
 	float DeltaValue = 0;
-	TaskWorldStateDelta.GetWorldStateFloatValue(WorldStateName, DeltaValue);
+	if ( TaskWorldStateDelta.GetWorldStateFloatValue(WorldStateName, DeltaValue) == false )
+	{
+		return false;
+	}
 	
 	RetVal = OriginalValue + DeltaValue;
 	

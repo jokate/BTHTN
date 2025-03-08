@@ -29,5 +29,12 @@ void USearchTargetTask::Action()
 // 해당 부분은 Simulate에 대한 특징을 지닌 것에 준한다.
 void USearchTargetTask::SimulateEffectToOwner()
 {
+	UHTNBTComponent* HTNBTComponent = GetHTNBTComponent();
+
+	if ( IsValid(HTNBTComponent) == false )
+	{
+		return;
+	}
 	
+	HTNBTComponent->AddWorldSimulatedProperty_Float("HasTarget", true, true);
 }

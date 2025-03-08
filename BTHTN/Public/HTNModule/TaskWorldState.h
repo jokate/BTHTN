@@ -24,6 +24,10 @@ class BTHTN_API UTaskWorldState : public UObject, public IWorldStateInterface
 
 public :
 
+	virtual void AddWorldStateIntegerValue( FName KeyName, int32 Value );
+	virtual void AddWorldStateFloatValue( FName KeyName, float Value );
+	virtual void AddWorldStateBooleanValue( FName KeyName,bool Value );
+	
 	//Need To Update World State Integer Value (Event Callbacks)
 	UFUNCTION()
 	virtual bool UpdateWorldIntegerValue( FName KeyName, int32 UpdatedValue ) override;
@@ -36,26 +40,22 @@ public :
 
 	//Original Values
 	virtual bool GetWorldStateBooleanValue( FName WorldStateName, bool& RetVal );
-
 	virtual bool GetWorldStateIntegerValue( FName WorldStateName, int32& RetVal );
-
 	virtual bool GetWorldStateFloatValue( FName WorldStateName, float& RetVal );
 
-	// Simulation Value.
-	UFUNCTION()
+	virtual bool IsPropertyDefined( FName PropertyName ) const;
+
+#pragma region Simulate Value
+	
 	virtual void UpdateWorldDeltaIntegerValue( FName KeyName, int32 SimulatedValue, bool IsAdded );
-
-	UFUNCTION()
 	virtual void UpdateWorldDeltaBooleanValue( FName KeyName, bool IsAdded, bool SimulatedValue = false );
-
-	UFUNCTION()
 	virtual void UpdateWorldDeltaFloatValue( FName KeyName, float SimulatedValue, bool IsAdded );
 	
-	virtual bool GetWorldSimulateStateBooleanValue( FName WorldStateName, bool& RetVal );
-
+	virtual bool GetWorldSimulateBooleanValue( FName WorldStateName, bool& RetVal );
 	virtual bool GetWorldSimulateIntegerValue( FName WorldStateName, int32& RetVal );
-
 	virtual bool GetWorldSimulateFloatValue( FName WorldStateName, float& RetVal );
+	
+#pragma endregion
 	
 protected :
 
