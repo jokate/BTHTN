@@ -20,6 +20,10 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void RunAI();
+
+	virtual void OnPossess(APawn* InPawn) override;
+	
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -33,4 +37,10 @@ protected :
 
 	UPROPERTY( EditDefaultsOnly, BlueprintReadWrite )
 	TSubclassOf<class UAttackerWorldState> AttackerWorldStateClass;
+	
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<class UBehaviorTree> BTAsset;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<class UBlackboardData> BBAsset;
 };

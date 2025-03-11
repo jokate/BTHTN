@@ -26,6 +26,25 @@ void AHTNBTAIController::BeginPlay()
 	}
 }
 
+void AHTNBTAIController::RunAI()
+{
+	UBlackboardComponent* BlackboardComp = Blackboard.Get();
+
+	bool bUseBlackBoard = UseBlackboard(BBAsset, BlackboardComp);
+
+	if (bUseBlackBoard)
+	{
+		RunBehaviorTree(BTAsset);
+	}
+}
+
+void AHTNBTAIController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	RunAI();
+}
+
 // Called every frame
 void AHTNBTAIController::Tick(float DeltaTime)
 {

@@ -101,6 +101,9 @@ bool UHTNBTComponent::DoDepthSearch(FGameplayTag TaskSearchTag, TArray<FGameplay
 		return false;
 	}
 
+	// Simulate Effect To WorldState
+	Task->SimulateEffectToOwner();
+	
 	TArray<FGameplayTag> NextTags;
 	Task->GetPossibleNextTag().GetGameplayTagArray(NextTags);
 	ShuffleTagArray(NextTags);
@@ -109,7 +112,8 @@ bool UHTNBTComponent::DoDepthSearch(FGameplayTag TaskSearchTag, TArray<FGameplay
 	{
 		return true;
 	}
-	
+
+	// Search Until the Dead End.
 	bool IsSuccess = false;
 	for (FGameplayTag& NextTag : NextTags)
 	{
@@ -117,7 +121,6 @@ bool UHTNBTComponent::DoDepthSearch(FGameplayTag TaskSearchTag, TArray<FGameplay
 			
 		if ( IsValid(NextTask) == true )
 		{
-			//성공 케이스가 하나 나오면 바로 break.
 			if ( DoDepthSearch(NextTask->GetTaskTag(), TaskSequence) == true )
 			{
 				IsSuccess = true;
@@ -133,6 +136,8 @@ bool UHTNBTComponent::DoDepthSearch(FGameplayTag TaskSearchTag, TArray<FGameplay
 		TaskSequence.RemoveAt(TaskSequence.Num() - 1);
 	}
 
+	Task->AfterSimulateEffectToOwner();
+	
 	return IsSuccess;
 }
 
