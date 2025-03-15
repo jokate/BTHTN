@@ -312,6 +312,27 @@ USTRUCT( BlueprintType )
 struct FTaskSimulateValue
 {
 	GENERATED_BODY()
+
+	UPROPERTY( EditAnywhere )
+	EHTNTaskRelatedValueType TaskRelatedValue = EHTNTaskRelatedValueType::NONE;
+
+	UPROPERTY( EditAnywhere )
+	FName TypeName;
+	
+	UPROPERTY( EditAnywhere, meta = (EditConditionHides = "TaskRelatedValue == EHTNTaskRelatedValueType::FLOAT"))
+	float FloatValue;
+
+	UPROPERTY( EditAnywhere, meta = (EditConditionHides = "TaskRelatedValue == EHTNTaskRelatedValueType::INT"))
+	int32 IntValue;
+
+	UPROPERTY( EditAnywhere, meta = (EditConditionHides = "TaskRelatedValue == EHTNTaskRelatedValueType::BOOL"))
+	bool BoolValue;
+};
+
+USTRUCT( BlueprintType )
+struct FTaskSimulateValue_Compare : public FTaskSimulateValue
+{
+	GENERATED_BODY()
 public :
 	template<typename T>
 	bool CompareValue( T& IncomeValue )
@@ -358,21 +379,6 @@ private :
 	}
 	
 public :
-		UPROPERTY( EditAnywhere )
-	EHTNTaskRelatedValueType TaskRelatedValue = EHTNTaskRelatedValueType::NONE;
-
-	UPROPERTY( EditAnywhere )
-	FName TypeName;
-
 	UPROPERTY( EditAnywhere )
 	EHTNTaskCheckType TaskCheckType = EHTNTaskCheckType::NONE;
-
-	UPROPERTY( EditAnywhere, meta = (EditConditionHides = "TaskRelatedValue == EHTNTaskRelatedValueType::FLOAT"))
-	float FloatValue;
-
-	UPROPERTY( EditAnywhere, meta = (EditConditionHides = "TaskRelatedValue == EHTNTaskRelatedValueType::INT"))
-	int32 IntValue;
-
-	UPROPERTY( EditAnywhere, meta = (EditConditionHides = "TaskRelatedValue == EHTNTaskRelatedValueType::BOOL"))
-	bool BoolValue;
 };

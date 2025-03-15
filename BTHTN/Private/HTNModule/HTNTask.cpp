@@ -15,7 +15,7 @@ bool UHTNTask::CheckPrecondition()
 	
 	bool RetVal = false;
 	// Check World State Value.
-	for ( FTaskSimulateValue& SimulateValue : SimulationValues )
+	for ( FTaskSimulateValue_Compare& SimulateValue : SimulationValues )
 	{
 		FName TypeName = SimulateValue.TypeName;
 		switch (SimulateValue.TaskRelatedValue)
@@ -66,6 +66,22 @@ void UHTNTask::InitializeHTNComponent(UHTNBTComponent* BTComponent)
  	}
 }
 
+void UHTNTask::SimulateEffectToOwner()
+{
+	for ( FTaskSimulateValue& SimulateValue : ApplySimulateValues )
+	{
+		ApplyTaskSimulateValue( SimulateValue, true );
+	}
+}
+
+void UHTNTask::AfterSimulateEffectToOwner()
+{
+	for ( FTaskSimulateValue& SimulateValue : ApplySimulateValues )
+	{
+		ApplyTaskSimulateValue( SimulateValue, false );
+	}
+}
+
 AActor* UHTNTask::GetOwner() const
 {
 	return OwnerActor.Get();
@@ -74,4 +90,31 @@ AActor* UHTNTask::GetOwner() const
 UHTNBTComponent* UHTNTask::GetHTNBTComponent() const
 {
 	return OwnerBTComponent.Get();
+}
+
+void UHTNTask::ApplyTaskSimulateValue(FTaskSimulateValue& TaskSimulateValue, bool IsAdded)
+{
+	UHTNBTComponent* HTNBTComponent = GetHTNBTComponent();
+
+	if ( IsValid(HTNBTComponent) == false )
+	{
+		return;
+	}
+
+	FName TypeName = TaskSimulateValue.TypeName;
+	switch (TaskSimulateValue.TaskRelatedValue )
+	{
+	case EHTNTaskRelatedValueType::INT :
+		HTNBTComponent->AddWorldSimulatedProperty_Int(TypeName, TaskSimulateValue.IntValue, IsAdded);
+		break;
+	case EHTNTaskRelatedValueType::BOOL :
+		HTNBTComponent->AddWorldSimulatedProperty_Bool(TypeName, TaskSimulateValue.BoolValue, IsAdded);
+		break;
+	case EHTNTaskRelatedValueType::FLOAT :
+		HTNBTComponent->AddWorldSimulatedProperty_Float(TypeName, TaskSimulateValue.FloatValue, IsAdded);
+		break;
+	default:
+		check("INVALID TYPE");
+		break;
+	}
 }

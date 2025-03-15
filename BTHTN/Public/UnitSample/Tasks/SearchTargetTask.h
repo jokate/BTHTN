@@ -15,11 +15,6 @@ class BTHTN_API USearchTargetTask : public UHTNTask
 	GENERATED_BODY()
 
 public :
-	virtual bool CheckPrecondition() override;
 
 	virtual void Action() override;
-
-	virtual void SimulateEffectToOwner() override;
-
-	virtual void AfterSimulateEffectToOwner() override;
 };

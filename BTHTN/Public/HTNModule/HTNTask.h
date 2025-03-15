@@ -33,9 +33,9 @@ public :
 
 	//This function will calculate effect.
 	//this effect will be marked in temp world state.
-	virtual void SimulateEffectToOwner() {}
+	virtual void SimulateEffectToOwner();
 
-	virtual void AfterSimulateEffectToOwner() {}
+	virtual void AfterSimulateEffectToOwner();
 
 	virtual bool IsTagForTask( FGameplayTag& InGameplayTag ) const { return TaskTag == InGameplayTag; }
 
@@ -48,6 +48,8 @@ public :
 	virtual FGameplayTagContainer& GetPossibleNextTag() { return PossibleNextTags; }
 
 protected :
+
+	void ApplyTaskSimulateValue( FTaskSimulateValue& SimulateValue, bool IsAdded );
 	
 protected :
 	
@@ -67,6 +69,11 @@ protected :
 	FGameplayTagContainer PossibleNextTags;
 	
 	UPROPERTY(EditDefaultsOnly)
-	TArray<FTaskSimulateValue> SimulationValues;
+	TArray<FTaskSimulateValue_Compare> SimulationValues;
+
+	//Affect World State.
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FTaskSimulateValue> ApplySimulateValues;
+	
 	//Todo. Cost function need to declared because of flexibility.
 };
