@@ -313,19 +313,19 @@ struct FTaskSimulateValue
 {
 	GENERATED_BODY()
 
-	UPROPERTY( EditAnywhere )
+	UPROPERTY( EditAnywhere, meta = (EditCondition = "TaskRelatedValue != EHTNTaskRelatedValueType::NONE", EditConditionHides) )
 	EHTNTaskRelatedValueType TaskRelatedValue = EHTNTaskRelatedValueType::NONE;
 
 	UPROPERTY( EditAnywhere )
 	FName TypeName;
 	
-	UPROPERTY( EditAnywhere, meta = (EditConditionHides = "TaskRelatedValue == EHTNTaskRelatedValueType::FLOAT"))
+	UPROPERTY( EditAnywhere, meta = (EditCondition = "TaskRelatedValue == EHTNTaskRelatedValueType::FLOAT", EditConditionHides))
 	float FloatValue;
 
-	UPROPERTY( EditAnywhere, meta = (EditConditionHides = "TaskRelatedValue == EHTNTaskRelatedValueType::INT"))
+	UPROPERTY( EditAnywhere, meta = (EditCondition = "TaskRelatedValue == EHTNTaskRelatedValueType::INT", EditConditionHides))
 	int32 IntValue;
 
-	UPROPERTY( EditAnywhere, meta = (EditConditionHides = "TaskRelatedValue == EHTNTaskRelatedValueType::BOOL"))
+	UPROPERTY( EditAnywhere, meta = (EditCondition = "TaskRelatedValue == EHTNTaskRelatedValueType::BOOL", EditConditionHides))
 	bool BoolValue;
 };
 
