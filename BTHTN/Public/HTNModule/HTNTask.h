@@ -4,14 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "HTNTaskConditionalValue.h"
 #include "UObject/Object.h"
 #include "HTNTask.generated.h"
 
 /**
  * 
  */
-
-
 UCLASS(Blueprintable, BlueprintType)
 class BTHTN_API UHTNTask : public UObject
 {
@@ -20,7 +19,7 @@ class BTHTN_API UHTNTask : public UObject
 public :
 	//Precondition Checker
 	//Notice : Precondition should return true to activate HTN Task.
-	virtual bool CheckPrecondition() { return true; }
+	virtual bool CheckPrecondition();
 
 	//Need To Register HTN Component To Active
 	//This Task will be managed by AI Owner
@@ -47,6 +46,8 @@ public :
 	virtual FGameplayTag GetTaskTag() const { return TaskTag; }
 
 	virtual FGameplayTagContainer& GetPossibleNextTag() { return PossibleNextTags; }
+
+protected :
 	
 protected :
 	
@@ -64,6 +65,8 @@ protected :
 	// Possible Task Tag : if planning task finished, planner will find next task by this tags.
 	UPROPERTY(EditDefaultsOnly)
 	FGameplayTagContainer PossibleNextTags;
-
+	
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FTaskSimulateValue> SimulationValues;
 	//Todo. Cost function need to declared because of flexibility.
 };

@@ -3,20 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "HTNEnum.h"
 #include "Interface/WorldStateInterface.h"
 #include "HTNTaskConditionalValue.generated.h"
 /**
  * 
  */
-
-UENUM(BlueprintType)
-enum class EHTNTaskRelatedValueType : uint8
-{
-	NONE,
-	FLOAT,
-	BOOL,
-	INT
-};
 
 USTRUCT(BlueprintType)
 struct FTaskRelatedValue
@@ -312,4 +304,75 @@ protected :
 
 	UPROPERTY( VisibleAnywhere, Category = "FLOAT")
 	TMap<FName, float> WorldState_Float;
+};
+
+// Purpose
+// Compare Simulate World Value.
+USTRUCT( BlueprintType )
+struct FTaskSimulateValue
+{
+	GENERATED_BODY()
+public :
+	template<typename T>
+	bool CompareValue( T& IncomeValue )
+	{
+		TFunctionRef<bool(T, T)> Operator = GetOperatorFunction<T>();
+		switch(TaskRelatedValue)
+		{
+		case EHTNTaskRelatedValueType::INT :
+			return Operator(IntValue, IncomeValue );
+		case EHTNTaskRelatedValueType::FLOAT :
+			return Operator(FloatValue, IncomeValue);
+		case EHTNTaskRelatedValueType::BOOL :
+			return Operator(BoolValue, IncomeValue);
+			
+		case EHTNTaskRelatedValueType::NONE: break;
+		}
+
+		return false;
+	}
+
+private : 
+	template<typename T>
+	TFunctionRef<bool(T, T)> GetOperatorFunction()
+	{
+		switch (TaskCheckType)
+		{
+		case EHTNTaskCheckType::LESS :
+			return [](T Prev, T After) { return Prev > After; };
+		case EHTNTaskCheckType::EQUAL :
+			return [](T Prev, T After) { return Prev == After; };
+		case EHTNTaskCheckType::GREATER :
+			return [](T Prev, T After) { return Prev < After; };
+		case EHTNTaskCheckType::LESS_EQUAL :
+			return [](T Prev, T After) { return Prev >= After; };
+		case EHTNTaskCheckType::GREATER_EQUAL :
+			return [](T Prev, T After ) { return Prev <= After; };
+		default :
+			{
+				check("INVALID TYPE");
+			}
+		}
+
+		return [](T Prev, T After) { return false; };
+	}
+	
+public :
+		UPROPERTY( EditAnywhere )
+	EHTNTaskRelatedValueType TaskRelatedValue = EHTNTaskRelatedValueType::NONE;
+
+	UPROPERTY( EditAnywhere )
+	FName TypeName;
+
+	UPROPERTY( EditAnywhere )
+	EHTNTaskCheckType TaskCheckType = EHTNTaskCheckType::NONE;
+
+	UPROPERTY( EditAnywhere, meta = (EditConditionHides = "TaskRelatedValue == EHTNTaskRelatedValueType::FLOAT"))
+	float FloatValue;
+
+	UPROPERTY( EditAnywhere, meta = (EditConditionHides = "TaskRelatedValue == EHTNTaskRelatedValueType::INT"))
+	int32 IntValue;
+
+	UPROPERTY( EditAnywhere, meta = (EditConditionHides = "TaskRelatedValue == EHTNTaskRelatedValueType::BOOL"))
+	bool BoolValue;
 };
