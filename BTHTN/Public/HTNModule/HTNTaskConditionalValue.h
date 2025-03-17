@@ -313,7 +313,7 @@ struct FTaskSimulateValue
 {
 	GENERATED_BODY()
 
-	UPROPERTY( EditAnywhere, meta = (EditCondition = "TaskRelatedValue != EHTNTaskRelatedValueType::NONE", EditConditionHides) )
+	UPROPERTY( EditAnywhere )
 	EHTNTaskRelatedValueType TaskRelatedValue = EHTNTaskRelatedValueType::NONE;
 
 	UPROPERTY( EditAnywhere )
@@ -379,6 +379,6 @@ private :
 	}
 	
 public :
-	UPROPERTY( EditAnywhere )
+	UPROPERTY( EditAnywhere, meta = (EditCondition = "TaskRelatedValue != EHTNTaskRelatedValueType::NONE", EditConditionHides)  )
 	EHTNTaskCheckType TaskCheckType = EHTNTaskCheckType::NONE;
 };
