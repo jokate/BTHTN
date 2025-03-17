@@ -17,6 +17,7 @@ class BTHTN_API UHTNTask : public UObject
 	GENERATED_BODY()
 
 public :
+	
 	//Precondition Checker
 	//Notice : Precondition should return true to activate HTN Task.
 	virtual bool CheckPrecondition();

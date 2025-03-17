@@ -4,6 +4,7 @@
 #include "HTNModule/HTNBTComponent.h"
 #include "HTNModule/HTNTask.h"
 #include "HTNModule/TaskWorldState.h"
+#include "UnitSample/AttackerWorldState.h"
 
 
 // Sets default values for this component's properties
@@ -17,6 +18,35 @@ UHTNBTComponent::UHTNBTComponent()
 void UHTNBTComponent::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void UHTNBTComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	for (UTaskWorldState* TaskWorldState : SpawnedTaskWorldStates)
+	{
+		if ( IsValid(TaskWorldState) == true)
+		{
+			TaskWorldState->ConditionalBeginDestroy();
+			TaskWorldState->MarkAsGarbage();
+		}
+	}
+
+	SpawnedTaskWorldStates.Empty();
+	
+	for ( TPair<FGameplayTag, UHTNTask*> HTNTask : RegisteredTask )
+	{
+		UHTNTask* Task = HTNTask.Value;
+
+		if ( IsValid(Task) == true)
+		{
+			Task->ConditionalBeginDestroy();
+			Task->MarkAsGarbage();
+		}
+	}
+
+	RegisteredTask.Empty();
+	
+	Super::EndPlay(EndPlayReason);
 }
 
 
@@ -80,7 +110,10 @@ void UHTNBTComponent::SimulatePlanningTask()
 	// 
 	TempTaskGameplayTag.Add(Task->GetTaskTag());
 	
-	DoDepthSearch(Task->GetTaskTag(), TempTaskGameplayTag);
+	if (DoDepthSearch(Task->GetTaskTag(), TempTaskGameplayTag) == false )
+	{
+		TempTaskGameplayTag.Remove(Task->GetTaskTag());
+	}
 	
 	TaskTagsToActive = TempTaskGameplayTag;
 }
@@ -119,20 +152,16 @@ bool UHTNBTComponent::DoDepthSearch(FGameplayTag TaskSearchTag, TArray<FGameplay
 			
 		if ( IsValid(NextTask) == true )
 		{
+			// Try To Add Sequence.
 			TaskSequence.Add(NextTask->GetTaskTag());
 			if ( DoDepthSearch(NextTask->GetTaskTag(), TaskSequence) == true )
 			{
 				IsSuccess = true;
 			 	break;	
 			}
-			
-			TaskSequence.RemoveAt(TaskSequence.Num() - 1);
+			// if failed, remove.
+			TaskSequence.Remove(NextTask->GetTaskTag());
 		}
-	}
-
-	if ( IsSuccess == false )
-	{
-		TaskSequence.RemoveAt(TaskSequence.Num() - 1);
 	}
 
 	Task->AfterSimulateEffectToOwner();
@@ -229,16 +258,18 @@ void UHTNBTComponent::AddTaskWorldState(UTaskWorldState* WorldState)
 {
 	if ( IsValid(WorldState) == true )
 	{
+		WorldState->SetupStructProperties();
 		SpawnedTaskWorldStates.Add(WorldState);
 	}
 }
 
 void UHTNBTComponent::AddTaskWorldStateByClass(TSubclassOf<UTaskWorldState> WorldStateClass)
 {
-	UTaskWorldState* WorldState = NewObject<UTaskWorldState>(WorldStateClass);
+	UTaskWorldState* WorldState = NewObject<UTaskWorldState>(this, WorldStateClass);
 
 	if ( IsValid(WorldState) == true )
 	{
+		Cast<UAttackerWorldState>(WorldState)->SetupStructProperties();
 		SpawnedTaskWorldStates.Add(WorldState);
 	}
 }

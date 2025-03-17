@@ -23,7 +23,7 @@ class BTHTN_API UTaskWorldState : public UObject, public IWorldStateInterface
 	GENERATED_BODY()
 
 public :
-
+	virtual void BeginDestroy() override;
 	virtual void AddWorldStateIntegerValue( FName KeyName, int32 Value );
 	virtual void AddWorldStateFloatValue( FName KeyName, float Value );
 	virtual void AddWorldStateBooleanValue( FName KeyName,bool Value );
@@ -46,6 +46,10 @@ public :
 	virtual bool IsPropertyDefined( FName PropertyName ) const;
 
 #pragma region Simulate Value
+
+	virtual void AddWorldStateSimulateIntegerValue( FName KeyName );
+	virtual void AddWorldStateSimulateFloatValue( FName KeyName );
+	virtual void AddWorldStateSimulateBooleanValue( FName KeyName );
 	
 	virtual void UpdateWorldDeltaIntegerValue( FName KeyName, int32 SimulatedValue, bool IsAdded );
 	virtual void UpdateWorldDeltaBooleanValue( FName KeyName, bool IsAdded, bool SimulatedValue = false );
@@ -56,13 +60,11 @@ public :
 	virtual bool GetWorldSimulateFloatValue( FName WorldStateName, float& RetVal );
 	
 #pragma endregion
+		
+	//We need to save all data in task related value in this world state
+	virtual void SetupStructProperties();
 	
 protected :
-
-	//We need to save all data in task related value in this world state
-	void SetupStructProperties();
-	
-protected : 
 	UPROPERTY(VisibleAnywhere)
 	FTaskWorldStateData TaskWorldState;
 

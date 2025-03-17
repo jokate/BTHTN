@@ -3,6 +3,13 @@
 
 #include "HTNModule/TaskWorldState.h"
 
+void UTaskWorldState::BeginDestroy()
+{
+	Super::BeginDestroy();
+	TaskWorldState.ResetAllState();
+	TaskWorldStateDelta.ResetAllState();
+}
+
 void UTaskWorldState::AddWorldStateIntegerValue(FName KeyName, int32 Value)
 {
 	TaskWorldState.AddIntegerValue(KeyName, Value);
@@ -98,6 +105,21 @@ bool UTaskWorldState::IsPropertyDefined(FName PropertyName) const
 	return TaskWorldStateDelta.IsPropertyDefined(PropertyName);
 }
 
+void UTaskWorldState::AddWorldStateSimulateIntegerValue(FName KeyName)
+{
+	TaskWorldStateDelta.AddIntegerValue( KeyName, 0 );
+}
+
+void UTaskWorldState::AddWorldStateSimulateFloatValue(FName KeyName )
+{
+	TaskWorldStateDelta.AddFloatValue( KeyName, 0.f );
+}
+
+void UTaskWorldState::AddWorldStateSimulateBooleanValue( FName KeyName )
+{
+	TaskWorldStateDelta.AddBooleanValue(KeyName, false);
+}
+
 void UTaskWorldState::UpdateWorldDeltaIntegerValue(FName KeyName, int32 SimulatedValue, bool IsAdded)
 {
 	int32 CurrentValue = 0;
@@ -182,12 +204,22 @@ bool UTaskWorldState::GetWorldSimulateFloatValue(FName WorldStateName, float& Re
 
 void UTaskWorldState::SetupStructProperties()
 {
-	for (TFieldIterator<FProperty> PropIt(GetClass()); PropIt; ++PropIt)
+	for (TFieldIterator<FProperty> PropIt(GetClass(), EFieldIterationFlags::IncludeSuper); PropIt; ++PropIt)
 	{
 		FProperty* Property = *PropIt;
 
+		if (Property == nullptr)
+		{
+			continue;
+		}
+		
 		FStructProperty* StructProperty = CastField<FStructProperty>(Property);
 
+		if ( StructProperty == nullptr )
+		{
+			continue;
+		}
+	
 		FTaskRelatedValue* RelatedValue = StructProperty->ContainerPtrToValuePtr<FTaskRelatedValue>(this);
 
 		// In this class we need to define the Task Conditional Value to mark world status.
@@ -209,7 +241,8 @@ void UTaskWorldState::SetupStructProperties()
 					continue;
 				}
 				
-				UpdateWorldIntegerValue(IntValue->GetKey(), IntValue->GetIntegerValue());
+				AddWorldStateIntegerValue(IntValue->GetKey(), IntValue->GetIntegerValue());
+				AddWorldStateSimulateIntegerValue( IntValue->GetKey() );
 			}
 			break;
 
@@ -221,7 +254,8 @@ void UTaskWorldState::SetupStructProperties()
 					continue;
 				}
 
-				UpdateWorldFloatValue(FloatValue->GetKey(), FloatValue->GetFloatValue());
+				AddWorldStateFloatValue(FloatValue->GetKey(), FloatValue->GetFloatValue());
+				AddWorldStateSimulateFloatValue(FloatValue->GetKey());
 			}
 			break;
 		case EHTNTaskRelatedValueType::BOOL :
@@ -232,7 +266,8 @@ void UTaskWorldState::SetupStructProperties()
 					continue;
 				}
 
-				UpdateWorldBooleanValue(BoolValue->GetKey(), BoolValue->GetBooleanValue());	
+				AddWorldStateBooleanValue(BoolValue->GetKey(), BoolValue->GetBooleanValue());
+				AddWorldStateSimulateBooleanValue(BoolValue->GetKey());
 			}
 			break;
 		default :

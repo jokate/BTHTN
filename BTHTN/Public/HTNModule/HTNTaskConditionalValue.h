@@ -17,6 +17,7 @@ struct FTaskRelatedValue
 public :
 
 	FTaskRelatedValue() {};
+	~FTaskRelatedValue() {};
 	
 	UPROPERTY( EditAnywhere, BlueprintReadOnly )
 	FName Key;
@@ -82,6 +83,7 @@ struct FTaskRelatedValue_Float : public FTaskRelatedValue
 {
 	GENERATED_BODY()
 	FTaskRelatedValue_Float() {};
+	~FTaskRelatedValue_Float() {};
 	FTaskRelatedValue_Float( FName InKey, float InValue )
 	{
 		Key = InKey;
@@ -119,6 +121,7 @@ struct FTaskRelatedValue_Boolean : public FTaskRelatedValue
 {
 	GENERATED_BODY()
 	FTaskRelatedValue_Boolean() {};
+	~FTaskRelatedValue_Boolean() {};
 	FTaskRelatedValue_Boolean( FName InKey, bool InValue )
 	{
 		Key = InKey;
@@ -156,6 +159,9 @@ struct FTaskRelatedValue_Int : public FTaskRelatedValue
 {
 	GENERATED_BODY()
 	FTaskRelatedValue_Int() {}
+	
+	~FTaskRelatedValue_Int() {}
+	
 	FTaskRelatedValue_Int( FName InKey, int32 InValue )
 	{
 		Key = InKey;
@@ -194,6 +200,12 @@ struct FTaskWorldStateData
 	GENERATED_BODY()
 
 public :
+	void ResetAllState()
+	{
+		WorldState_Boolean.Empty();
+		WorldState_Float.Empty();
+		WorldState_Int32.Empty();
+	};
 	// We assume that this values will be used to determine action plans.
 	// So this world state will be cached sometimes while blackboardasset is not.
 	void AddIntegerValue( FName KeyName, int32 InValue )
