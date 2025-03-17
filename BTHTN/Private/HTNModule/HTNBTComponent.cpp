@@ -78,11 +78,9 @@ void UHTNBTComponent::SimulatePlanningTask()
 
 	// Search Function.
 	// 
+	TempTaskGameplayTag.Add(Task->GetTaskTag());
 	
-	if ( DoDepthSearch(Task->GetTaskTag(), TempTaskGameplayTag) == true )
-	{
-		TempTaskGameplayTag.Add(Task->GetTaskTag());
-	} 
+	DoDepthSearch(Task->GetTaskTag(), TempTaskGameplayTag);
 	
 	TaskTagsToActive = TempTaskGameplayTag;
 }
@@ -121,6 +119,7 @@ bool UHTNBTComponent::DoDepthSearch(FGameplayTag TaskSearchTag, TArray<FGameplay
 			
 		if ( IsValid(NextTask) == true )
 		{
+			TaskSequence.Add(NextTask->GetTaskTag());
 			if ( DoDepthSearch(NextTask->GetTaskTag(), TaskSequence) == true )
 			{
 				IsSuccess = true;
@@ -198,6 +197,14 @@ UHTNTask* UHTNBTComponent::GetMatchPreconditionTask()
 	}
 
 	return MatchTask;
+}
+
+void UHTNBTComponent::RemoveFirstTagInTaskList()
+{
+	if ( TaskTagsToActive.IsValidIndex(0) == true )
+	{
+		TaskTagsToActive.RemoveAt(0);
+	}
 }
 
 void UHTNBTComponent::ShuffleTagArray(TArray<FGameplayTag>& ShuffleArray)

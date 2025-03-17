@@ -54,6 +54,8 @@ public:
 
 	virtual UHTNTask* GetMatchPreconditionTask();
 
+	virtual void RemoveFirstTagInTaskList();
+
 	virtual void ShuffleTagArray( TArray<FGameplayTag>& ShuffleArray );
 
 	virtual bool DoDepthSearch(FGameplayTag TaskSearchTag, TArray<FGameplayTag>& TaskSequence);
