@@ -15,6 +15,5 @@ class BTHTN_API USearchTargetTask : public UHTNTask
 	GENERATED_BODY()
 
 public :
-
-	virtual void Action() override;
+	virtual void TestActionLog() override;
 };

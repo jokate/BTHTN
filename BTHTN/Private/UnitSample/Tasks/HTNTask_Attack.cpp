@@ -3,9 +3,9 @@
 
 #include "UnitSample/Tasks/HTNTask_Attack.h"
 
-void UHTNTask_Attack::Action()
+void UHTNTask_Attack::TestActionLog()
 {
-	Super::Action();
+	Super::TestActionLog();
 
-	UE_LOG(LogTemp, Log, TEXT("Attack!"));
+	UE_LOG(HTNTaskLog, Log, TEXT("Test Log : Attack!"));
 }

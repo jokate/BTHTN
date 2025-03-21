@@ -37,7 +37,7 @@ EBTNodeResult::Type UBTTask_TestAction::ExecuteTask(UBehaviorTreeComponent& Owne
 		return EBTNodeResult::Failed;	
 	}
 
-	FirstExecutionTask->Action();
+	FirstExecutionTask->TestActionLog();
 
 	PlanningComponent->RemoveFirstTagInTaskList();
 	

@@ -23,3 +23,10 @@ enum class EHTNTaskCheckType : uint8
 	LESS_EQUAL		UMETA(DisplayName = "Less Equal"),
 	EQUAL			UMETA(DisplayName = "Equal"),
 };
+
+UENUM( BlueprintType )
+enum class EHTNTaskType : uint8
+{
+	COMPOUND,
+	PRIMITIVE,
+};

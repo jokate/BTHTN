@@ -118,55 +118,11 @@ void UHTNBTComponent::SimulatePlanningTask()
 	TaskTagsToActive = TempTaskGameplayTag;
 }
 
+// Need To Change.
 bool UHTNBTComponent::DoDepthSearch(FGameplayTag TaskSearchTag, TArray<FGameplayTag>& TaskSequence)
 {
-	UHTNTask* Task = GetTaskByTag( TaskSearchTag );
-
-	if ( IsValid(Task) == false )
-	{
-		return false;
-	}
-
-	if ( Task->CheckPrecondition() == false )
-	{
-		return false;
-	}
-
-	// Simulate Effect To WorldState
-	Task->SimulateEffectToOwner();
 	
-	TArray<FGameplayTag> NextTags;
-	Task->GetPossibleNextTag().GetGameplayTagArray(NextTags);
-	ShuffleTagArray(NextTags);
-
-	if ( NextTags.Num() == 0 )
-	{
-		return true;
-	}
-
-	// Search Until the Dead End.
-	bool IsSuccess = false;
-	for (FGameplayTag& NextTag : NextTags)
-	{
-		UHTNTask* NextTask = GetTaskByTag(NextTag);
-			
-		if ( IsValid(NextTask) == true )
-		{
-			// Try To Add Sequence.
-			TaskSequence.Add(NextTask->GetTaskTag());
-			if ( DoDepthSearch(NextTask->GetTaskTag(), TaskSequence) == true )
-			{
-				IsSuccess = true;
-			 	break;	
-			}
-			// if failed, remove.
-			TaskSequence.Remove(NextTask->GetTaskTag());
-		}
-	}
-
-	Task->AfterSimulateEffectToOwner();
-	
-	return IsSuccess;
+	return true;
 }
 
 

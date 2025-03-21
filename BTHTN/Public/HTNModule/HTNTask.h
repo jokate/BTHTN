@@ -11,6 +11,8 @@
 /**
  * 
  */
+DEFINE_LOG_CATEGORY_STATIC( HTNTaskLog, Log, All);
+// 2025-03-21 Need To Change                                             
 UCLASS(Blueprintable, BlueprintType)
 class BTHTN_API UHTNTask : public UObject
 {
@@ -25,9 +27,6 @@ public :
 	//Need To Register HTN Component To Active
 	//This Task will be managed by AI Owner
 	virtual void InitializeHTNComponent( class UHTNBTComponent* BTComponent );
-
-	//Do Action To Owner
-	virtual void Action() {}
 
 	//Effect To Owner After Action. (Real Action)
 	virtual void EffectToOwner() {}
@@ -47,6 +46,10 @@ public :
 	virtual FGameplayTag GetTaskTag() const { return TaskTag; }
 
 	virtual FGameplayTagContainer& GetPossibleNextTag() { return PossibleNextTags; }
+
+#if UE_EDITOR
+	virtual void TestActionLog() {};
+#endif
 
 protected :
 
@@ -68,6 +71,10 @@ protected :
 	// Possible Task Tag : if planning task finished, planner will find next task by this tags.
 	UPROPERTY(EditDefaultsOnly)
 	FGameplayTagContainer PossibleNextTags;
+
+	// Next Sequence Tag
+	UPROPERTY( EditDefaultsOnly )
+	FGameplayTagContainer SequenceTags;
 	
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FTaskSimulateValue_Compare> SimulationValues;

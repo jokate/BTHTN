@@ -14,5 +14,5 @@ class BTHTN_API UHTNTask_Attack : public UHTNTask
 {
 	GENERATED_BODY()
 
-	virtual void Action() override;
+	virtual void TestActionLog() override;
 };

@@ -4,8 +4,9 @@
 #include "UnitSample/Tasks/SearchTargetTask.h"
 #include "HTNModule/HTNBTComponent.h"
 
-void USearchTargetTask::Action()
+void USearchTargetTask::TestActionLog()
 {
-	UE_LOG(LogTemp, Log, TEXT("Finding Target..."));
-	Super::Action();
+	Super::TestActionLog();
+
+	UE_LOG( HTNTaskLog, Log, TEXT("Test Log : Target Search") );
 }
