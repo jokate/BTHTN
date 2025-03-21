@@ -28,24 +28,29 @@ public :
 	//This Task will be managed by AI Owner
 	virtual void InitializeHTNComponent( class UHTNBTComponent* BTComponent );
 
-	//Effect To Owner After Action. (Real Action)
-	virtual void EffectToOwner() {}
-
 	//This function will calculate effect.
 	//this effect will be marked in temp world state.
-	virtual void SimulateEffectToOwner();
+	virtual void SimulateEffectToOwner(bool bIsOnlySimulate);
 
 	virtual void AfterSimulateEffectToOwner();
 
 	virtual bool IsTagForTask( FGameplayTag& InGameplayTag ) const { return TaskTag == InGameplayTag; }
+	
+#pragma region Getter Function
 
 	virtual AActor* GetOwner() const;
 
 	virtual UHTNBTComponent* GetHTNBTComponent() const;
-
+	
 	virtual FGameplayTag GetTaskTag() const { return TaskTag; }
 
 	virtual FGameplayTagContainer& GetPossibleNextTag() { return PossibleNextTags; }
+
+	virtual EHTNTaskType GetTaskType() const { return HTNTaskType; }
+
+	virtual FGameplayTagContainer& GetSequenceTagContainer() { return SequenceTags; }
+
+#pragma endregion 
 
 #if UE_EDITOR
 	virtual void TestActionLog() {};
@@ -82,6 +87,8 @@ protected :
 	//Affect World State.
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FTaskSimulateValue> ApplySimulateValues;
-	
+
+	UPROPERTY( EditDefaultsOnly )
+	EHTNTaskType HTNTaskType;
 	//Todo. Cost function need to declared because of flexibility.
 };

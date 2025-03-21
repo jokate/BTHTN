@@ -97,32 +97,37 @@ void UHTNBTComponent::SimulatePlanningTask()
 		return;
 	}
 	
-	UHTNTask* Task = GetMatchPreconditionTask();
-
-	if ( IsValid(Task) == false)
-	{
-		return;
-	}
-
 	TArray<FGameplayTag> TempTaskGameplayTag;
-
-	// Search Function.
-	// 
-	TempTaskGameplayTag.Add(Task->GetTaskTag());
-	
-	if (DoDepthSearch(Task->GetTaskTag(), TempTaskGameplayTag) == false )
+	TempTaskGameplayTag.Add(RootGameplayTag);
+	while (TempTaskGameplayTag.IsEmpty() == false)
 	{
-		TempTaskGameplayTag.Remove(Task->GetTaskTag());
+		FGameplayTag TaskGameplayTag = TempTaskGameplayTag.Pop();
+
+		UHTNTask* HTNTask = GetTaskByTag(TaskGameplayTag);
+
+		if ( IsValid(HTNTask) == false)
+		{
+			continue;	
+		}
+
+		if ( HTNTask->CheckPrecondition() == false )
+		{
+			continue;
+		}
+
+		EHTNTaskType HTNTaskType = HTNTask->GetTaskType();
+
+		if ( HTNTaskType == EHTNTaskType::COMPOUND )
+		{
+			
+		}
+		else
+		{
+			
+		}
 	}
 	
 	TaskTagsToActive = TempTaskGameplayTag;
-}
-
-// Need To Change.
-bool UHTNBTComponent::DoDepthSearch(FGameplayTag TaskSearchTag, TArray<FGameplayTag>& TaskSequence)
-{
-	
-	return true;
 }
 
 
@@ -164,24 +169,6 @@ UHTNTask* UHTNBTComponent::GetFirstTaskInPlan()
 {
 	FGameplayTag FirstTagToActive = GetTaskTagToActive();
 	return GetTaskByTag(FirstTagToActive);
-}
-
-UHTNTask* UHTNBTComponent::GetMatchPreconditionTask()
-{
-	UHTNTask* MatchTask = nullptr;
-	for ( TPair<FGameplayTag, UHTNTask*> Task : RegisteredTask )
-	{
-		UHTNTask* TaskValue = Task.Value;
-
-		// if first Match 
-		if ( IsValid( TaskValue ) == true && TaskValue->CheckPrecondition() == true )
-		{
-			MatchTask = TaskValue;
-			break;
-		}
-	}
-
-	return MatchTask;
 }
 
 void UHTNBTComponent::RemoveFirstTagInTaskList()
@@ -253,206 +240,3 @@ void UHTNBTComponent::ResetAllTaskWorldStates()
 {
 	SpawnedTaskWorldStates.Empty();
 }
-
-int32 UHTNBTComponent::GetWorldStateProperty_Int(FName PropertyName)
-{
-	int32 RetVal = -1;
-	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
-	{
-		if ( IsValid(WorldState) == false )
-		{
-			continue;
-		}
-
-		if ( WorldState->IsPropertyDefined(PropertyName) == false)
-		{
-			continue;
-		}
-		
-		if (WorldState->GetWorldStateIntegerValue(PropertyName, RetVal) == true)
-		{
-			break;
-		}
-	}
-
-	return RetVal;
-}
-
-// Caution : Boolean Value Can be false by Default Value. So you NEED TO be careful when you are handling boolean Property.
-bool UHTNBTComponent::GetWorldStateProperty_Bool(FName PropertyName)
-{
-	bool RetVal = false;
-	
-	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
-	{
-		if ( IsValid(WorldState) == false )
-		{
-			continue;
-		}
-
-		if ( WorldState->IsPropertyDefined(PropertyName) == false)
-		{
-			continue;
-		}
-		
-		if (WorldState->GetWorldStateBooleanValue(PropertyName, RetVal) == true)
-		{
-			break;
-		}
-	}
-
-	return RetVal;
-}
-
-
-float UHTNBTComponent::GetWorldStateProperty_Float(FName PropertyName)
-{
-	float RetVal = FLT_MAX;
-	
-	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
-	{
-		if ( IsValid(WorldState) == false )
-		{
-			continue;
-		}
-
-		if ( WorldState->IsPropertyDefined(PropertyName) == false)
-		{
-			continue;
-		}
-		
-		if (WorldState->GetWorldStateFloatValue(PropertyName, RetVal) == true)
-		{
-			break;
-		}
-	}
-
-	return RetVal;
-}
-
-int32 UHTNBTComponent::GetSimulatedProperty_Int(FName PropertyName)
-{
-	int32 RetVal = -1;
-	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
-	{
-		if ( IsValid(WorldState) == false )
-		{
-			continue;
-		}
-		
-		if ( WorldState->IsPropertyDefined(PropertyName) == false)
-		{
-			continue;
-		}
-		
-		if (WorldState->GetWorldSimulateIntegerValue(PropertyName, RetVal) == true)
-		{
-			break;
-		}
-	}
-
-	return RetVal;
-}
-
-bool UHTNBTComponent::GetSimulatedProperty_Bool(FName PropertyName)
-{
-	bool RetVal = false;
-	
-	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
-	{
-		if ( IsValid(WorldState) == false )
-		{
-			continue;
-		}
-
-		if ( WorldState->IsPropertyDefined(PropertyName) == false)
-		{
-			continue;
-		}
-		
-		if ( WorldState->GetWorldSimulateBooleanValue(PropertyName, RetVal) == true )
-		{
-			break;
-		}
-	}
-
-	return RetVal;
-}
-
-float UHTNBTComponent::GetSimulatedProperty_Float(FName PropertyName)
-{
-	float RetVal = FLT_MAX;
-	
-	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
-	{
-		if ( IsValid(WorldState) == false )
-		{
-			continue;
-		}
-
-		if ( WorldState->IsPropertyDefined(PropertyName) == false)
-		{
-			continue;
-		}
-		
-		if (WorldState->GetWorldSimulateFloatValue(PropertyName, RetVal) == true)
-		{
-			break;
-		}
-	}
-
-	return RetVal;
-}
-
-// We Assume that World State Already Has Defined Property
-void UHTNBTComponent::AddWorldSimulatedProperty_Float(FName PropertyName, float Value, bool IsAdded )
-{
-	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
-	{
-		if ( IsValid(WorldState) == false )
-		{
-			continue;
-		}
-
-		if ( WorldState->IsPropertyDefined(PropertyName) == true )
-		{
-			WorldState->UpdateWorldDeltaFloatValue(PropertyName, Value, IsAdded );
-			break;
-		}
-	}
-}
-
-void UHTNBTComponent::AddWorldSimulatedProperty_Int(FName PropertyName, int32 Value, bool IsAdded )
-{
-	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
-	{
-		if ( IsValid(WorldState) == false )
-		{
-			continue;
-		}
-
-		if ( WorldState->IsPropertyDefined(PropertyName) == true )
-		{
-			WorldState->UpdateWorldDeltaIntegerValue(PropertyName, Value, IsAdded);
-			break;
-		}
-	}
-}
-
-void UHTNBTComponent::AddWorldSimulatedProperty_Bool(FName PropertyName, bool Value, bool IsAdded )
-{
-	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
-	{
-		if ( IsValid(WorldState) == false )
-		{
-			continue;
-		}
-
-		if ( WorldState->IsPropertyDefined(PropertyName) == true )
-		{
-			WorldState->UpdateWorldDeltaBooleanValue(PropertyName, IsAdded, Value );
-			break;
-		}
-	}
-}
-

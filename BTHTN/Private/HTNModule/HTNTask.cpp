@@ -2,6 +2,8 @@
 
 
 #include "HTNModule/HTNTask.h"
+
+#include "HTNModule/HTNBlueprintFunctionLibrary.h"
 #include "HTNModule/HTNBTComponent.h"
 
 bool UHTNTask::CheckPrecondition()
@@ -22,19 +24,19 @@ bool UHTNTask::CheckPrecondition()
 		{
 		case EHTNTaskRelatedValueType::INT :
 			{
-				int32 CurrentSimulateValue = HTNBTComponent->GetSimulatedProperty_Int(TypeName);
+				int32 CurrentSimulateValue = UHTNBlueprintFunctionLibrary::GetSimulatedProperty_Int(HTNBTComponent, TypeName);
 				RetVal &= SimulateValue.CompareValue(CurrentSimulateValue);
 			}
 			break;
 		case EHTNTaskRelatedValueType::BOOL :
 			{
-				float CurrentSimulateValue = HTNBTComponent->GetSimulatedProperty_Bool(TypeName);
+				float CurrentSimulateValue = UHTNBlueprintFunctionLibrary::GetSimulatedProperty_Bool(HTNBTComponent, TypeName);
 				RetVal &= SimulateValue.CompareValue(CurrentSimulateValue);
 			}
 			break;
 		case EHTNTaskRelatedValueType::FLOAT :
 			{
-				float CurrentSimulateValue = HTNBTComponent->GetSimulatedProperty_Float(TypeName);
+				float CurrentSimulateValue = UHTNBlueprintFunctionLibrary::GetSimulatedProperty_Float(HTNBTComponent, TypeName);
 				RetVal &= SimulateValue.CompareValue(CurrentSimulateValue);
 			}
 			break;
@@ -66,7 +68,7 @@ void UHTNTask::InitializeHTNComponent(UHTNBTComponent* BTComponent)
  	}
 }
 
-void UHTNTask::SimulateEffectToOwner()
+void UHTNTask::SimulateEffectToOwner(bool bIsOnlySimulate)
 {
 	for ( FTaskSimulateValue& SimulateValue : ApplySimulateValues )
 	{
@@ -105,13 +107,13 @@ void UHTNTask::ApplyTaskSimulateValue(FTaskSimulateValue& TaskSimulateValue, boo
 	switch (TaskSimulateValue.TaskRelatedValue )
 	{
 	case EHTNTaskRelatedValueType::INT :
-		HTNBTComponent->AddWorldSimulatedProperty_Int(TypeName, TaskSimulateValue.IntValue, IsAdded);
+		UHTNBlueprintFunctionLibrary::AddWorldSimulatedProperty_Int( HTNBTComponent, TypeName, TaskSimulateValue.IntValue, IsAdded);
 		break;
 	case EHTNTaskRelatedValueType::BOOL :
-		HTNBTComponent->AddWorldSimulatedProperty_Bool(TypeName, TaskSimulateValue.BoolValue, IsAdded);
+		UHTNBlueprintFunctionLibrary::AddWorldSimulatedProperty_Bool( HTNBTComponent, TypeName, TaskSimulateValue.BoolValue, IsAdded);
 		break;
 	case EHTNTaskRelatedValueType::FLOAT :
-		HTNBTComponent->AddWorldSimulatedProperty_Float(TypeName, TaskSimulateValue.FloatValue, IsAdded);
+		UHTNBlueprintFunctionLibrary::AddWorldSimulatedProperty_Float( HTNBTComponent, TypeName, TaskSimulateValue.FloatValue, IsAdded);
 		break;
 	default:
 		check("INVALID TYPE");

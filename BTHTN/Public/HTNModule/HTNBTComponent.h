@@ -54,13 +54,9 @@ public:
 	// We need to check running plan because of external factor.
 	virtual UHTNTask* GetFirstTaskInPlan();
 
-	virtual UHTNTask* GetMatchPreconditionTask();
-
 	virtual void RemoveFirstTagInTaskList();
 
 	virtual void ShuffleTagArray( TArray<FGameplayTag>& ShuffleArray );
-
-	virtual bool DoDepthSearch(FGameplayTag TaskSearchTag, TArray<FGameplayTag>& TaskSequence);
 
 #pragma region Task World State
 	
@@ -71,24 +67,12 @@ public:
 	virtual void RemoveTaskWorldState(TSubclassOf<UTaskWorldState> WorldStateClass);
 
 	virtual void ResetAllTaskWorldStates();
+
+	TArray<TObjectPtr<class UTaskWorldState>>& GetTaskWorldStates() { return SpawnedTaskWorldStates; }
 	
 #pragma endregion Task World State
-
-	// World Property Getter
-	virtual int32 GetWorldStateProperty_Int( FName PropertyName );
-	virtual bool GetWorldStateProperty_Bool( FName PropertyName );
-	virtual float GetWorldStateProperty_Float( FName PropertyName );
-
-	virtual int32 GetSimulatedProperty_Int( FName PropertyName );
-	virtual bool GetSimulatedProperty_Bool( FName PropertyName );
-	virtual float GetSimulatedProperty_Float( FName PropertyName );
-
-	virtual void AddWorldSimulatedProperty_Float( FName PropertyName, float Value, bool IsAdded );
-	virtual void AddWorldSimulatedProperty_Int( FName PropertyName, int32 Value, bool IsAdded );
-	virtual void AddWorldSimulatedProperty_Bool( FName PropertyName, bool Value, bool IsAdded );
 	
 protected :
-	
 	UPROPERTY(VisibleAnywhere, Category = "HTN Task | Task To Active")
 	TArray<FGameplayTag> TaskTagsToActive;
 	
@@ -97,5 +81,8 @@ protected :
 	
 	UPROPERTY()
 	TArray<TObjectPtr<class UTaskWorldState>> SpawnedTaskWorldStates;
+
+	UPROPERTY(EditDefaultsOnly)
+	FGameplayTag RootGameplayTag;
 };
 
