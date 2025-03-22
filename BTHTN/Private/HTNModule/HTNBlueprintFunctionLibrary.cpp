@@ -225,6 +225,22 @@ void UHTNBlueprintFunctionLibrary::AddWorldSimulatedProperty_Bool(UHTNBTComponen
 	}
 }
 
+void UHTNBlueprintFunctionLibrary::SetWorldStateProperty_Int(UHTNBTComponent* BTComponent, FName PropertyName,
+	int32 SettingValue)
+{
+	
+}
+
+void UHTNBlueprintFunctionLibrary::SetWorldStateProperty_Float(UHTNBTComponent* BTComponent, FName PropertyName,
+	float SettingValue)
+{
+}
+
+void UHTNBlueprintFunctionLibrary::SetWorldStateProperty_Boolean(UHTNBTComponent* BTComponent, FName PropertyName,
+	bool SettingValue)
+{
+}
+
 //if BTComponent Is not valid crash.
 TArray<TObjectPtr<UTaskWorldState>>& UHTNBlueprintFunctionLibrary::GetTaskWorldState(UHTNBTComponent* BTComponent)
 {

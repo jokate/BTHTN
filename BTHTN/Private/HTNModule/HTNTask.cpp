@@ -68,19 +68,11 @@ void UHTNTask::InitializeHTNComponent(UHTNBTComponent* BTComponent)
  	}
 }
 
-void UHTNTask::SimulateEffectToOwner(bool bIsOnlySimulate)
+void UHTNTask::SimulateEffectToOwner( bool bIsAdded )
 {
 	for ( FTaskSimulateValue& SimulateValue : ApplySimulateValues )
 	{
-		ApplyTaskSimulateValue( SimulateValue, true );
-	}
-}
-
-void UHTNTask::AfterSimulateEffectToOwner()
-{
-	for ( FTaskSimulateValue& SimulateValue : ApplySimulateValues )
-	{
-		ApplyTaskSimulateValue( SimulateValue, false );
+		ApplyTaskSimulateValue( SimulateValue, bIsAdded );
 	}
 }
 

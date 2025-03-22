@@ -179,23 +179,6 @@ void UHTNBTComponent::RemoveFirstTagInTaskList()
 	}
 }
 
-void UHTNBTComponent::ShuffleTagArray(TArray<FGameplayTag>& ShuffleArray)
-{
-	if ( ShuffleArray.Num() > 0 )
-	{
-		int32 LastIndex = ShuffleArray.Num() - 1;
-
-		for ( int32 i = 0; i <= LastIndex; i++ )
-		{
-			int32 Index = FMath::RandRange(0, LastIndex);
-
-			if ( i != Index)
-			{
-				ShuffleArray.Swap(i, Index);
-			}
-		}
-	}
-}
 
 void UHTNBTComponent::AddTaskWorldState(UTaskWorldState* WorldState)
 {

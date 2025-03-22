@@ -56,8 +56,6 @@ public:
 
 	virtual void RemoveFirstTagInTaskList();
 
-	virtual void ShuffleTagArray( TArray<FGameplayTag>& ShuffleArray );
-
 #pragma region Task World State
 	
 	virtual void AddTaskWorldState(UTaskWorldState* WorldState);

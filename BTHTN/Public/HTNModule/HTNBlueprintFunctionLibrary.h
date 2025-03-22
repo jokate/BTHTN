@@ -31,5 +31,9 @@ public :
 	static void AddWorldSimulatedProperty_Int( UHTNBTComponent* BTComponent, FName PropertyName, int32 Value, bool IsAdded );
 	static void AddWorldSimulatedProperty_Bool( UHTNBTComponent* BTComponent, FName PropertyName, bool Value, bool IsAdded );
 
+	static void SetWorldStateProperty_Int( UHTNBTComponent* BTComponent, FName PropertyName, int32 SettingValue );
+	static void SetWorldStateProperty_Float( UHTNBTComponent* BTComponent, FName PropertyName, float SettingValue );
+	static void SetWorldStateProperty_Boolean( UHTNBTComponent* BTComponent, FName PropertyName, bool SettingValue );
+	
 	static TArray<TObjectPtr<UTaskWorldState>>& GetTaskWorldState( UHTNBTComponent* BTComponent );
 };

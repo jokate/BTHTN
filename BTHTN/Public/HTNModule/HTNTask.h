@@ -19,7 +19,6 @@ class BTHTN_API UHTNTask : public UObject
 	GENERATED_BODY()
 
 public :
-	
 	//Precondition Checker
 	//Notice : Precondition should return true to activate HTN Task.
 	virtual bool CheckPrecondition();
@@ -30,9 +29,8 @@ public :
 
 	//This function will calculate effect.
 	//this effect will be marked in temp world state.
-	virtual void SimulateEffectToOwner(bool bIsOnlySimulate);
-
-	virtual void AfterSimulateEffectToOwner();
+	virtual void SimulateEffectToOwner( bool bIsAdded );
+	
 
 	virtual bool IsTagForTask( FGameplayTag& InGameplayTag ) const { return TaskTag == InGameplayTag; }
 	
@@ -74,10 +72,11 @@ protected :
 	FGameplayTag TaskTag;
 
 	// Possible Task Tag : if planning task finished, planner will find next task by this tags.
+	// 
 	UPROPERTY(EditDefaultsOnly)
 	FGameplayTagContainer PossibleNextTags;
 
-	// Next Sequence Tag
+	// Next Sequence Tag ( Compound Task Only ) 
 	UPROPERTY( EditDefaultsOnly )
 	FGameplayTagContainer SequenceTags;
 	
