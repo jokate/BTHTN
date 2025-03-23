@@ -98,6 +98,7 @@ void UHTNBTComponent::SimulatePlanningTask()
 	}
 	
 	TArray<FGameplayTag> TempTaskGameplayTag;
+	TArray<FGameplayTag> FinalPlans;
 	TempTaskGameplayTag.Add(RootGameplayTag);
 	while (TempTaskGameplayTag.IsEmpty() == false)
 	{
@@ -105,9 +106,9 @@ void UHTNBTComponent::SimulatePlanningTask()
 
 		UHTNTask* HTNTask = GetTaskByTag(TaskGameplayTag);
 
-		if ( IsValid(HTNTask) == false)
+		if ( IsValid(HTNTask) == false )
 		{
-			continue;	
+			continue;
 		}
 
 		if ( HTNTask->CheckPrecondition() == false )
@@ -117,13 +118,53 @@ void UHTNBTComponent::SimulatePlanningTask()
 
 		EHTNTaskType HTNTaskType = HTNTask->GetTaskType();
 
+		// Compound Task Case.
 		if ( HTNTaskType == EHTNTaskType::COMPOUND )
 		{
-			
+			// Find Precondition Match.
+			TArray<FGameplayTag> PossibleTagArray;
+			FGameplayTagContainer& PossibleTag = HTNTask->GetPossibleNextTag();
+			PossibleTag.GetGameplayTagArray(PossibleTagArray);
+
+			UHTNTask* ResultTask = nullptr;
+			for ( FGameplayTag& TaskTag : PossibleTagArray )
+			{
+				// Check Task Precondition	
+				UHTNTask* PossibleTask = GetTaskByTag( TaskTag );
+
+				if ( IsValid( PossibleTask ) == false )
+				{
+					continue;
+				}
+
+				if ( PossibleTask->CheckPrecondition() == true )
+				{
+					ResultTask = PossibleTask;
+					break;
+				}
+			}
+
+			// if Found Precondition Match Task.
+			if ( IsValid(ResultTask) == true )
+			{
+				
+			}
+			else
+			{
+				
+			}
 		}
 		else
 		{
-			
+			// if Primitive Task Simply Add.
+			if ( HTNTask->CheckPrecondition() == true )
+			{
+				FinalPlans.Add( HTNTask->GetTaskTag() );
+			}
+			else
+			{
+				
+			}
 		}
 	}
 	
