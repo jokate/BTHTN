@@ -61,12 +61,8 @@ public:
 	virtual void AddTaskWorldState(UTaskWorldState* WorldState);
 
 	virtual void AddTaskWorldStateByClass(TSubclassOf<UTaskWorldState> WorldStateClass);
-
-	virtual void RemoveTaskWorldState(TSubclassOf<UTaskWorldState> WorldStateClass);
-
-	virtual void ResetAllTaskWorldStates();
-
-	TArray<TObjectPtr<class UTaskWorldState>>& GetTaskWorldStates() { return SpawnedTaskWorldStates; }
+	
+	UTaskWorldState* GetTaskWorldState() const { return SpawnedTaskWorldState; }
 	
 #pragma endregion Task World State
 	
@@ -77,8 +73,8 @@ protected :
 	UPROPERTY(VisibleAnywhere, Category = "HTN Task | Tag To Allocate")
 	TMap<FGameplayTag, UHTNTask*> RegisteredTask;
 	
-	UPROPERTY()
-	TArray<TObjectPtr<class UTaskWorldState>> SpawnedTaskWorldStates;
+	UPROPERTY( VisibleAnywhere, Category = "HTN Task | Spawned Task")
+	TObjectPtr<UTaskWorldState> SpawnedTaskWorldState;
 
 	UPROPERTY(EditDefaultsOnly)
 	FGameplayTag RootGameplayTag;

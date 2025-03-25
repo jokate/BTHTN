@@ -36,7 +36,7 @@ protected :
 	TObjectPtr<class UHTNBTComponent> HTNBTComponent;
 
 	UPROPERTY( EditDefaultsOnly, BlueprintReadWrite )
-	TSubclassOf<class UAttackerWorldState> AttackerWorldStateClass;
+	TSubclassOf<class UTaskWorldState> AttackerWorldStateClass;
 	
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<class UBehaviorTree> BTAsset;

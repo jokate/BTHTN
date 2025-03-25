@@ -5,9 +5,24 @@
 
 void UTaskWorldState::BeginDestroy()
 {
-	Super::BeginDestroy();
 	TaskWorldState.ResetAllState();
 	TaskWorldStateDelta.ResetAllState();
+
+	UE_LOG(LogTemp, Log, TEXT("WorldState Destroyed"));
+
+	for (TFieldIterator<FProperty> PropIt(GetClass(), EFieldIterationFlags::IncludeSuper); PropIt; ++PropIt)
+	{
+		FProperty* Property = *PropIt;
+		if (FStructProperty* StructProperty = CastField<FStructProperty>(Property))
+		{
+			if (FTaskRelatedValue* RelatedValue = StructProperty->ContainerPtrToValuePtr<FTaskRelatedValue>(this))
+			{
+				RelatedValue->SetOwner(nullptr);  // 명시적으로 초기화
+			}
+		}
+	}
+	
+	Super::BeginDestroy();
 }
 
 void UTaskWorldState::AddWorldStateIntegerValue(FName KeyName, int32 Value)
@@ -32,10 +47,12 @@ bool UTaskWorldState::UpdateWorldIntegerValue(FName KeyName, int32 UpdatedValue)
 		return false;
 	}
 
+	
 	if ( OnUpdatedTaskRelatedValue_Integer.IsBound() == true )
 	{
 		OnUpdatedTaskRelatedValue_Integer.Broadcast(KeyName, UpdatedValue);
 	}
+	
 
 	return true;
 }
@@ -47,10 +64,12 @@ bool UTaskWorldState::UpdateWorldBooleanValue(FName KeyName, bool UpdatedValue)
 		return false;
 	}
 
+	
 	if ( OnUpdatedTaskRelatedValue_Boolean.IsBound() == true )
 	{
 		OnUpdatedTaskRelatedValue_Boolean.Broadcast(KeyName, UpdatedValue);
 	}
+	
 
 	return true;
 }

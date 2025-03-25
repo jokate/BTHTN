@@ -2,6 +2,8 @@
 
 
 #include "HTNModule/HTNBTComponent.h"
+
+#include "AIController.h"
 #include "HTNModule/HTNTask.h"
 #include "HTNModule/TaskWorldState.h"
 #include "UnitSample/AttackerWorldState.h"
@@ -22,17 +24,6 @@ void UHTNBTComponent::BeginPlay()
 
 void UHTNBTComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	for (UTaskWorldState* TaskWorldState : SpawnedTaskWorldStates)
-	{
-		if ( IsValid(TaskWorldState) == true)
-		{
-			TaskWorldState->ConditionalBeginDestroy();
-			TaskWorldState->MarkAsGarbage();
-		}
-	}
-
-	SpawnedTaskWorldStates.Empty();
-	
 	for ( TPair<FGameplayTag, UHTNTask*> HTNTask : RegisteredTask )
 	{
 		UHTNTask* Task = HTNTask.Value;
@@ -45,6 +36,9 @@ void UHTNBTComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	}
 
 	RegisteredTask.Empty();
+
+	
+	SpawnedTaskWorldState->ConditionalBeginDestroy();
 	
 	Super::EndPlay(EndPlayReason);
 }
@@ -226,41 +220,18 @@ void UHTNBTComponent::AddTaskWorldState(UTaskWorldState* WorldState)
 	if ( IsValid(WorldState) == true )
 	{
 		WorldState->SetupStructProperties();
-		SpawnedTaskWorldStates.Add(WorldState);
+		SpawnedTaskWorldState  = WorldState;
 	}
 }
 
 void UHTNBTComponent::AddTaskWorldStateByClass(TSubclassOf<UTaskWorldState> WorldStateClass)
 {
-	UTaskWorldState* WorldState = NewObject<UTaskWorldState>(this, WorldStateClass);
+	AAIController* Controller = Cast<AAIController>(GetOwner());
+	UTaskWorldState* WorldState = NewObject<UTaskWorldState>( Controller->GetPawn(), WorldStateClass );
 
 	if ( IsValid(WorldState) == true )
 	{
-		Cast<UAttackerWorldState>(WorldState)->SetupStructProperties();
-		SpawnedTaskWorldStates.Add(WorldState);
+		WorldState->SetupStructProperties();
+		SpawnedTaskWorldState = WorldState;
 	}
-}
-
-void UHTNBTComponent::RemoveTaskWorldState(TSubclassOf<UTaskWorldState> WorldStateClass)
-{
-	UTaskWorldState* NeedToRemove = nullptr;
-	
-	for ( UTaskWorldState* WorldState : SpawnedTaskWorldStates )
-	{
-		if (WorldState->GetClass() == WorldStateClass)
-		{
-			NeedToRemove = WorldState;
-			break;
-		}
-	}
-
-	if ( IsValid(NeedToRemove) == true )
-	{
-		SpawnedTaskWorldStates.Remove(NeedToRemove);	
-	}
-}
-
-void UHTNBTComponent::ResetAllTaskWorldStates()
-{
-	SpawnedTaskWorldStates.Empty();
 }

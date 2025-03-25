@@ -35,5 +35,5 @@ public :
 	static void SetWorldStateProperty_Float( UHTNBTComponent* BTComponent, FName PropertyName, float SettingValue );
 	static void SetWorldStateProperty_Boolean( UHTNBTComponent* BTComponent, FName PropertyName, bool SettingValue );
 	
-	static TArray<TObjectPtr<UTaskWorldState>>& GetTaskWorldState( UHTNBTComponent* BTComponent );
+	static UTaskWorldState* GetTaskWorldState( UHTNBTComponent* BTComponent );
 };

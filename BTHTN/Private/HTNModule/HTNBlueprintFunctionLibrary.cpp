@@ -7,25 +7,22 @@
 
 int32 UHTNBlueprintFunctionLibrary::GetWorldStateProperty_Int(UHTNBTComponent* BTComponent, FName PropertyName)
 {
-	TArray<TObjectPtr<UTaskWorldState>>& WorldStates = GetTaskWorldState(BTComponent);
+	UTaskWorldState* WorldState = GetTaskWorldState(BTComponent);
 
 	int32 RetVal = -1;
-	for ( UTaskWorldState* WorldState : WorldStates )
+	if ( IsValid(WorldState) == false )
 	{
-		if ( IsValid(WorldState) == false )
-		{
-			continue;
-		}
+		return -1;
+	}
 
-		if ( WorldState->IsPropertyDefined(PropertyName) == false)
-		{
-			continue;
-		}
+	if ( WorldState->IsPropertyDefined(PropertyName) == false)
+	{
+		return -1;
+	}
 		
-		if (WorldState->GetWorldStateIntegerValue(PropertyName, RetVal) == true)
-		{
-			break;
-		}
+	if (WorldState->GetWorldStateIntegerValue(PropertyName, RetVal) == true)
+	{
+		return -1;
 	}
 
 	return RetVal;
@@ -33,26 +30,23 @@ int32 UHTNBlueprintFunctionLibrary::GetWorldStateProperty_Int(UHTNBTComponent* B
 
 bool UHTNBlueprintFunctionLibrary::GetWorldStateProperty_Bool(UHTNBTComponent* BTComponent, FName PropertyName)
 {
-	TArray<TObjectPtr<UTaskWorldState>>& WorldStates = GetTaskWorldState(BTComponent);
+	UTaskWorldState* WorldState = GetTaskWorldState(BTComponent);
 	
 	bool RetVal = false;
 	
-	for ( UTaskWorldState* WorldState : WorldStates )
+	if ( IsValid(WorldState) == false )
 	{
-		if ( IsValid(WorldState) == false )
-		{
-			continue;
-		}
+		return false;
+	}
 
-		if ( WorldState->IsPropertyDefined(PropertyName) == false)
-		{
-			continue;
-		}
+	if ( WorldState->IsPropertyDefined(PropertyName) == false)
+	{
+		return false;
+	}
 		
-		if (WorldState->GetWorldStateBooleanValue(PropertyName, RetVal) == true)
-		{
-			break;
-		}
+	if (WorldState->GetWorldStateBooleanValue(PropertyName, RetVal) == false)
+	{
+		return false;
 	}
 
 	return RetVal;
@@ -60,26 +54,23 @@ bool UHTNBlueprintFunctionLibrary::GetWorldStateProperty_Bool(UHTNBTComponent* B
 
 float UHTNBlueprintFunctionLibrary::GetWorldStateProperty_Float(UHTNBTComponent* BTComponent, FName PropertyName)
 {
-	TArray<TObjectPtr<UTaskWorldState>>& WorldStates = GetTaskWorldState(BTComponent);
+	UTaskWorldState* WorldState = GetTaskWorldState(BTComponent);
 	
 	float RetVal = FLT_MAX;
 	
-	for ( UTaskWorldState* WorldState : WorldStates )
+	if ( IsValid(WorldState) == false )
 	{
-		if ( IsValid(WorldState) == false )
-		{
-			continue;
-		}
+		return FLT_MAX;
+	}
 
-		if ( WorldState->IsPropertyDefined(PropertyName) == false)
-		{
-			continue;
-		}
+	if ( WorldState->IsPropertyDefined(PropertyName) == false)
+	{
+		return FLT_MAX;
+	}
 		
-		if (WorldState->GetWorldStateFloatValue(PropertyName, RetVal) == true)
-		{
-			break;
-		}
+	if ( WorldState->GetWorldStateFloatValue(PropertyName, RetVal) == false )
+	{
+		return FLT_MAX;
 	}
 
 	return RetVal;
@@ -87,25 +78,22 @@ float UHTNBlueprintFunctionLibrary::GetWorldStateProperty_Float(UHTNBTComponent*
 
 int32 UHTNBlueprintFunctionLibrary::GetSimulatedProperty_Int(UHTNBTComponent* BTComponent, FName PropertyName)
 {
-	TArray<TObjectPtr<UTaskWorldState>>& WorldStates = GetTaskWorldState(BTComponent);
+	UTaskWorldState* WorldState = GetTaskWorldState(BTComponent);
 	
 	int32 RetVal = -1;
-	for ( UTaskWorldState* WorldState : WorldStates )
+	if ( IsValid(WorldState) == false )
 	{
-		if ( IsValid(WorldState) == false )
-		{
-			continue;
-		}
+		return -1;
+	}
 		
-		if ( WorldState->IsPropertyDefined(PropertyName) == false)
-		{
-			continue;
-		}
+	if ( WorldState->IsPropertyDefined(PropertyName) == false)
+	{
+		return -1;
+	}
 		
-		if (WorldState->GetWorldSimulateIntegerValue(PropertyName, RetVal) == true)
-		{
-			break;
-		}
+	if (WorldState->GetWorldSimulateIntegerValue(PropertyName, RetVal) == false)
+	{
+		return -1;
 	}
 
 	return RetVal;
@@ -113,26 +101,23 @@ int32 UHTNBlueprintFunctionLibrary::GetSimulatedProperty_Int(UHTNBTComponent* BT
 
 bool UHTNBlueprintFunctionLibrary::GetSimulatedProperty_Bool(UHTNBTComponent* BTComponent, FName PropertyName)
 {
-	TArray<TObjectPtr<UTaskWorldState>>& WorldStates = GetTaskWorldState(BTComponent);
+	UTaskWorldState* WorldState = GetTaskWorldState(BTComponent);
 	
 	bool RetVal = false;
 	
-	for ( UTaskWorldState* WorldState : WorldStates )
+	if ( IsValid(WorldState) == false )
 	{
-		if ( IsValid(WorldState) == false )
-		{
-			continue;
-		}
+		return false;
+	}
 
-		if ( WorldState->IsPropertyDefined(PropertyName) == false)
-		{
-			continue;
-		}
+	if ( WorldState->IsPropertyDefined(PropertyName) == false)
+	{
+		return false;
+	}
 		
-		if ( WorldState->GetWorldSimulateBooleanValue(PropertyName, RetVal) == true )
-		{
-			break;
-		}
+	if ( WorldState->GetWorldSimulateBooleanValue(PropertyName, RetVal) == false )
+	{
+		return false;
 	}
 
 	return RetVal;
@@ -140,26 +125,23 @@ bool UHTNBlueprintFunctionLibrary::GetSimulatedProperty_Bool(UHTNBTComponent* BT
 
 float UHTNBlueprintFunctionLibrary::GetSimulatedProperty_Float(UHTNBTComponent* BTComponent, FName PropertyName)
 {
-	TArray<TObjectPtr<UTaskWorldState>>& WorldStates = GetTaskWorldState(BTComponent);
+	UTaskWorldState* WorldState = GetTaskWorldState(BTComponent);
 	
 	float RetVal = FLT_MAX;
 	
-	for ( UTaskWorldState* WorldState : WorldStates )
+	if ( IsValid(WorldState) == false )
 	{
-		if ( IsValid(WorldState) == false )
-		{
-			continue;
-		}
+		return FLT_MAX;
+	}
 
-		if ( WorldState->IsPropertyDefined(PropertyName) == false)
-		{
-			continue;
-		}
+	if ( WorldState->IsPropertyDefined(PropertyName) == false)
+	{
+		return FLT_MAX;
+	}
 		
-		if (WorldState->GetWorldSimulateFloatValue(PropertyName, RetVal) == true)
-		{
-			break;
-		}
+	if (WorldState->GetWorldSimulateFloatValue(PropertyName, RetVal) == false)
+	{
+		return FLT_MAX;
 	}
 
 	return RetVal;
@@ -168,60 +150,48 @@ float UHTNBlueprintFunctionLibrary::GetSimulatedProperty_Float(UHTNBTComponent* 
 void UHTNBlueprintFunctionLibrary::AddWorldSimulatedProperty_Float(UHTNBTComponent* BTComponent, FName PropertyName,
 	float Value, bool IsAdded)
 {
-	TArray<TObjectPtr<UTaskWorldState>>& WorldStates = GetTaskWorldState(BTComponent);
+	UTaskWorldState* WorldState = GetTaskWorldState(BTComponent);
 	
-	for ( UTaskWorldState* WorldState : WorldStates )
+	if ( IsValid(WorldState) == false )
 	{
-		if ( IsValid(WorldState) == false )
-		{
-			continue;
-		}
+		return;
+	}
 
-		if ( WorldState->IsPropertyDefined(PropertyName) == true )
-		{
-			WorldState->UpdateWorldDeltaFloatValue(PropertyName, Value, IsAdded );
-			break;
-		}
+	if ( WorldState->IsPropertyDefined(PropertyName) == true )
+	{
+		WorldState->UpdateWorldDeltaFloatValue(PropertyName, Value, IsAdded );
 	}
 }
 
 void UHTNBlueprintFunctionLibrary::AddWorldSimulatedProperty_Int(UHTNBTComponent* BTComponent, FName PropertyName,
 	int32 Value, bool IsAdded)
 {
-	TArray<TObjectPtr<UTaskWorldState>>& WorldStates = GetTaskWorldState(BTComponent);
+	UTaskWorldState* WorldState = GetTaskWorldState(BTComponent);
 
-	for ( UTaskWorldState* WorldState : WorldStates )
+	if ( IsValid(WorldState) == false )
 	{
-		if ( IsValid(WorldState) == false )
-		{
-			continue;
-		}
+		return;
+	}
 
-		if ( WorldState->IsPropertyDefined(PropertyName) == true )
-		{
-			WorldState->UpdateWorldDeltaIntegerValue( PropertyName, Value, IsAdded );
-			break;
-		}
+	if ( WorldState->IsPropertyDefined(PropertyName) == true )
+	{
+		WorldState->UpdateWorldDeltaIntegerValue( PropertyName, Value, IsAdded );
 	}
 }
 
 void UHTNBlueprintFunctionLibrary::AddWorldSimulatedProperty_Bool(UHTNBTComponent* BTComponent, FName PropertyName,
 	bool Value, bool IsAdded)
 {
-	TArray<TObjectPtr<UTaskWorldState>>& WorldStates = GetTaskWorldState(BTComponent);
+	UTaskWorldState* WorldState = GetTaskWorldState(BTComponent);
 
-	for ( UTaskWorldState* WorldState : WorldStates )
+	if ( IsValid(WorldState) == false )
 	{
-		if ( IsValid(WorldState) == false )
-		{
-			continue;
-		}
+		return;
+	}
 
-		if ( WorldState->IsPropertyDefined(PropertyName) == true )
-		{
-			WorldState->UpdateWorldDeltaBooleanValue( PropertyName, Value, IsAdded );
-			break;
-		}
+	if ( WorldState->IsPropertyDefined(PropertyName) == true )
+	{
+		WorldState->UpdateWorldDeltaBooleanValue( PropertyName, Value, IsAdded );
 	}
 }
 
@@ -242,8 +212,8 @@ void UHTNBlueprintFunctionLibrary::SetWorldStateProperty_Boolean(UHTNBTComponent
 }
 
 //if BTComponent Is not valid crash.
-TArray<TObjectPtr<UTaskWorldState>>& UHTNBlueprintFunctionLibrary::GetTaskWorldState(UHTNBTComponent* BTComponent)
+UTaskWorldState* UHTNBlueprintFunctionLibrary::GetTaskWorldState(UHTNBTComponent* BTComponent)
 {
 	check(BTComponent);
-	return BTComponent->GetTaskWorldStates();
+	return BTComponent->GetTaskWorldState();
 }

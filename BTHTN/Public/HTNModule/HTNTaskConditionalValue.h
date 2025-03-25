@@ -13,11 +13,11 @@
 USTRUCT(BlueprintType)
 struct FTaskRelatedValue
 {
-  GENERATED_BODY()
+	GENERATED_BODY()
 public :
 
 	FTaskRelatedValue() {};
-	~FTaskRelatedValue() {};
+	~FTaskRelatedValue() = default;
 	
 	UPROPERTY( EditAnywhere, BlueprintReadOnly )
 	FName Key;
@@ -47,6 +47,11 @@ public :
 	
 	template<typename T>
 	void UpdateValue( T& UpdateValue );
+
+	void ResetOwner()
+	{
+		OwnerWorldState.Reset();
+	}
 
 	bool operator==(const FTaskRelatedValue& Other) const
 	{
@@ -83,7 +88,7 @@ struct FTaskRelatedValue_Float : public FTaskRelatedValue
 {
 	GENERATED_BODY()
 	FTaskRelatedValue_Float() {};
-	~FTaskRelatedValue_Float() {};
+	~FTaskRelatedValue_Float() = default;
 	FTaskRelatedValue_Float( FName InKey, float InValue )
 	{
 		Key = InKey;
@@ -121,7 +126,7 @@ struct FTaskRelatedValue_Boolean : public FTaskRelatedValue
 {
 	GENERATED_BODY()
 	FTaskRelatedValue_Boolean() {};
-	~FTaskRelatedValue_Boolean() {};
+	~FTaskRelatedValue_Boolean() = default;
 	FTaskRelatedValue_Boolean( FName InKey, bool InValue )
 	{
 		Key = InKey;
@@ -159,9 +164,7 @@ struct FTaskRelatedValue_Int : public FTaskRelatedValue
 {
 	GENERATED_BODY()
 	FTaskRelatedValue_Int() {}
-	
-	~FTaskRelatedValue_Int() {}
-	
+	~FTaskRelatedValue_Int() = default;
 	FTaskRelatedValue_Int( FName InKey, int32 InValue )
 	{
 		Key = InKey;
