@@ -10,6 +10,18 @@
 #include "Interface/HTNBTPlanner.h"
 #include "HTNBTComponent.generated.h"
 
+USTRUCT()
+struct FSequenceQueryStruct
+{
+	GENERATED_BODY()
+
+public :
+	UPROPERTY()
+	FGameplayTag OwnerTaskTag;
+
+	UPROPERTY()
+	FGameplayTag TaskTag;
+};
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class BTHTN_API UHTNBTComponent : public UActorComponent

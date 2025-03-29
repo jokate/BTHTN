@@ -93,6 +93,7 @@ void UHTNBTComponent::SimulatePlanningTask()
 	
 	TArray<FGameplayTag> TempTaskGameplayTag;
 	TArray<FGameplayTag> FinalPlans;
+	
 	TempTaskGameplayTag.Add(RootGameplayTag);
 	while (TempTaskGameplayTag.IsEmpty() == false)
 	{
@@ -141,10 +142,31 @@ void UHTNBTComponent::SimulatePlanningTask()
 			// if Found Precondition Match Task.
 			if ( IsValid(ResultTask) == true )
 			{
-				
+				// Sequence 저장. ( Record하는 방법은 분명 유효함. -> 단 내부에서 빠져주는 부분이 있어야 함. )
+				// 어느정도 유연하게 교체가 되어야 한다.
+				// 시퀀스 Tag들을 싹다 넣어줘야 함.
+				TArray<FGameplayTag> SubsequenceArray;
+				ResultTask->GetSequenceTagContainer().GetGameplayTagArray(SubsequenceArray);
+
+				for ( int32 SequenceTagLength = SubsequenceArray.Num() - 1; SubsequenceArray.Num() > 0; SequenceTagLength-- )
+				{
+					TempTaskGameplayTag.Add(SubsequenceArray[SequenceTagLength]);
+				}
 			}
 			else
 			{
+				//Search Failed.
+				for (FGameplayTag& GameplayTag : FinalPlans)
+				{
+					UHTNTask* Task = GetTaskByTag(GameplayTag);
+
+					if ( IsValid(Task) == true )
+					{
+						Task->SimulateEffectToOwner( false );
+					} 
+				}
+
+				FinalPlans.Empty();
 				
 			}
 		}
@@ -153,16 +175,29 @@ void UHTNBTComponent::SimulatePlanningTask()
 			// if Primitive Task Simply Add.
 			if ( HTNTask->CheckPrecondition() == true )
 			{
+				HTNTask->SimulateEffectToOwner( true );
 				FinalPlans.Add( HTNTask->GetTaskTag() );
 			}
 			else
 			{
-				
+				//Search Failed.
+				for (FGameplayTag& GameplayTag : FinalPlans)
+				{
+					UHTNTask* Task = GetTaskByTag(GameplayTag);
+
+					if ( IsValid(Task) == true )
+					{
+						Task->SimulateEffectToOwner( false );
+					} 
+				}
+
+				FinalPlans.Empty();
+				break;
 			}
 		}
 	}
 	
-	TaskTagsToActive = TempTaskGameplayTag;
+	TaskTagsToActive = FinalPlans;
 }
 
 
